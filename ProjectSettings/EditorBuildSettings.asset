@@ -12,6 +12,9 @@ EditorBuildSettings:
     path: Assets/Scenes/Credits.unity
     guid: 0a1a84c9e71aa394f983c84597e29bff
   - enabled: 1
+    path: Assets/Scenes/CardSelection.unity
+    guid: f61afd49bb5065c4896ab50b1d919947
+  - enabled: 1
     path: Assets/Scenes/Map.unity
     guid: f5d1bc9752be564419886e9c847fcf38
   - enabled: 1

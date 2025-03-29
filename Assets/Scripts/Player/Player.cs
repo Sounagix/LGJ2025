@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 enum GAME_STATE : int
 {
@@ -9,21 +11,52 @@ enum GAME_STATE : int
 
 public class Player : MonoBehaviour
 {
+    private BaseCardSO _mainCard;
 
-    public IEnumerator MoveToPosition(Vector2 target, float duration, BoardManager boardManager)
+    private List<BaseCardSO> _deck = new List<BaseCardSO>();
+
+    public static Player Instance { get; private set; }
+
+    private void OnEnable()
     {
-        float elapsed = 0f;
-        Vector2 start = transform.position;
+        GameManagerActions.OnSceneChange += OnSceneLoaded;
+    }
 
-        while (elapsed < duration)
+    private void Awake()
+    {
+        if (Instance == null)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            transform.position = Vector2.Lerp(start, target, t);
-            yield return null;
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
         }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
-        transform.position = target;
-        boardManager.OnPlayerMovementFinished();
+    public void AddMainCard(BaseCardSO baseCardSO)
+    {
+        _mainCard = baseCardSO;
+    }
+
+    public void AddCardToDeck(BaseCardSO baseCardSO)
+    {
+        _deck.Add(baseCardSO);
+    }
+
+    private void OnSceneLoaded(SCENES sCENES)
+    {
+
+    }
+
+    public BaseCardSO GetMainCard()
+    {
+        return _mainCard;
+    }
+
+    public List<BaseCardSO> GetDeck()
+    {
+        return _deck;
     }
 }

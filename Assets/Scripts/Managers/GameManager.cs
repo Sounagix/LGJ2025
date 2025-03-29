@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,12 +6,19 @@ using UnityEngine.SceneManagement;
 
 public enum SCENES: int
 {
-    MAIN_MENU = 0,
-    CREDITS = 1,
-    GAME = 2,
-    COMBAT = 3,
-    REWARD = 4,
+    MAIN_MENU   = 0,
+    CREDITS     = 1,
+    INIT_SCENE  = 2,
+    GAME        = 3,
+    COMBAT      = 4,
+    REWARD      = 5,
 }
+
+public static class  GameManagerActions
+{
+    public static Action<SCENES> OnSceneChange;
+}
+
 
 public class GameManager : MonoBehaviour
 {
@@ -31,7 +39,19 @@ public class GameManager : MonoBehaviour
 
     public void LoadScene(SCENES scene)
     {
+        if (scene.Equals(SCENES.MAIN_MENU))
+        {
+            Destroy(Player.Instance.gameObject);
+            Destroy(BoardManager.Instance.gameObject);
+        }
+        GameManagerActions.OnSceneChange?.Invoke(scene);
+
         SceneManager.LoadScene((int)scene);
+    }
+
+    public SCENES GetScene()
+    {
+        return (SCENES)SceneManager.GetActiveScene().buildIndex;
     }
 
     public void LoadAditiveScene(string scene)

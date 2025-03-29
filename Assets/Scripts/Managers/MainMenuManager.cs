@@ -14,7 +14,7 @@ public class MainMenuManager : MonoBehaviour
         _playButton.onClick.AddListener(
             delegate ()
             {
-                SceneManager.LoadScene((int)SCENES.GAME);
+                SceneManager.LoadScene((int)SCENES.INIT_SCENE);
             });
         _creditButton.onClick.AddListener(
             delegate ()

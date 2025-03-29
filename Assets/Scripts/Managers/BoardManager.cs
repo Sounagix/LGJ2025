@@ -25,7 +25,8 @@ public class BoardManager : MonoBehaviour
     private float _displacementDuration;
 
     [SerializeField]
-    private Player _player;
+    private Transform _playerBody;
+
 
     private MapCard _playerCard;
 
@@ -33,7 +34,7 @@ public class BoardManager : MonoBehaviour
 
     private Coroutine _playerMovement;
 
-    public BoardManager Instance { get; private set; }
+    public static BoardManager Instance;
 
     private void Awake()
     {
@@ -76,7 +77,6 @@ public class BoardManager : MonoBehaviour
             }
         }
         SetPlayerOnTheCenter();
-
     }
 
     private void SetPlayerOnTheCenter()
@@ -87,17 +87,34 @@ public class BoardManager : MonoBehaviour
 
         if (centerIndex >= 0 && centerIndex < _cards.Count)
         {
-            _player.transform.position = _cards[centerIndex].transform.position;
+            _playerBody.position = _cards[centerIndex].transform.position;
             _playerCard = _cards[centerIndex];
         }
     }
+    private IEnumerator MovePlayer(Vector2 target, float duration, BoardManager boardManager)
+    {
+        float elapsed = 0f;
+        Vector2 start = _playerBody.position;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            _playerBody.position = Vector2.Lerp(start, target, t);
+            yield return null;
+        }
+
+        transform.position = target;
+        boardManager.OnPlayerMovementFinished();
+    }
+
 
     public void OnCardTouched(MapCard mapCard)
     {
         if (_playerMovement == null && IsAdjacent(_playerCard.GetIndex(), mapCard.GetIndex()))
         {
             _playerCard.OnCardUnSelected();
-            _playerMovement = StartCoroutine(_player.MoveToPosition(mapCard.transform.position, _displacementDuration, this));
+            _playerMovement = StartCoroutine(MovePlayer(mapCard.transform.position, _displacementDuration, this));
             _playerCard = mapCard;
             _playerCard.OnCardSelected();
         }   
@@ -114,6 +131,18 @@ public class BoardManager : MonoBehaviour
     public void OnPlayerMovementFinished()
     {
         _playerMovement = null;
-        GameManager.Instance.LoadScene(SCENES.COMBAT);
+        switch (_playerCard.GetCardType())
+        {
+            case CARD_TYPE.ENEMY:
+                GameManager.Instance.LoadScene(SCENES.COMBAT);
+                break;
+            case CARD_TYPE.REWARD:
+                GameManager.Instance.LoadScene(SCENES.REWARD);
+                break;
+            case CARD_TYPE.BLOCK:
+                break;
+            case CARD_TYPE.NULL:
+                break;
+        }
     }
 }

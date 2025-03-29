@@ -1,7 +1,16 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.Serialization;
 using UnityEngine;
+
+public enum CARD_TYPE
+{
+    ENEMY,
+    REWARD,
+    BLOCK,
+    NULL
+}
 
 public class MapCard : MonoBehaviour
 {
@@ -11,9 +20,16 @@ public class MapCard : MonoBehaviour
 
     private Vector2Int _index;
 
+    private CARD_TYPE _cardType = CARD_TYPE.NULL;
+
     private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
+    }
+
+    private void Start()
+    {
+        _cardType = (CARD_TYPE)UnityEngine.Random.Range(0, (int)CARD_TYPE.NULL);
     }
 
     public void SetUp(BoardManager boardManager, Vector2Int index)
@@ -30,6 +46,11 @@ public class MapCard : MonoBehaviour
     private void OnMouseDown()
     {
         _boardManager.OnCardTouched(this);
+    }
+
+    public CARD_TYPE GetCardType()
+    {
+        return _cardType;
     }
 
     public void OnCardSelected()
