@@ -15,7 +15,9 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
     [SerializeField]
     private Player _player;
 
-    private BaseCardSO _baseCardSO; 
+    private BaseCardSO _baseCardSO;
+
+    private Vector2 _initialAnchoredPosition;
 
     public void Initialize(BaseCardSO card)
     {
@@ -23,6 +25,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
         _cardDescription.text = card._cardDescription;
         _image.texture = card._cardImage.texture;
         _baseCardSO = card;
+        _initialAnchoredPosition = GetComponent<RectTransform>().anchoredPosition;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -56,7 +59,8 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        //throw new System.NotImplementedException();
+        GetComponentInParent<HorizontalLayoutGroup>().enabled = false;
+        transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 
     public void OnDrag(PointerEventData eventData)
@@ -67,6 +71,29 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        //throw new System.NotImplementedException();
+        CombatActions.OnDropDragedCard?.Invoke(this);
+    }
+    public string GetName()
+    {
+        return _cardName.text;
+    }
+
+    public string GetDescription()
+    {
+        return _cardDescription.text;
+    }
+
+    public Sprite GetSpriteFromRawImage()
+    {
+        Texture2D tex = _image.texture as Texture2D;
+        if (tex == null) return null;
+
+        return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f));
+    }
+
+    public void NotSelectedOnSlot()
+    {
+        GetComponentInParent<HorizontalLayoutGroup>().enabled = true;
+        //GetComponent<RectTransform>().localPosition = _initialAnchoredPosition;
     }
 }

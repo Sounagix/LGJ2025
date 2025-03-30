@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class BoardManager : MonoBehaviour
 {
@@ -27,14 +28,25 @@ public class BoardManager : MonoBehaviour
     [SerializeField]
     private Transform _playerBody;
 
-
     private MapCard _playerCard;
 
     private List<MapCard> _cards = new List<MapCard>();
 
+    private Vector2 position;
+
     private Coroutine _playerMovement;
 
     public static BoardManager Instance;
+
+    private void OnEnable()
+    {
+        GameManagerActions.OnSceneChange += OnSceneChange;
+    }
+
+    private void OnDisable()
+    {
+        GameManagerActions.OnSceneChange -= OnSceneChange;
+    }
 
     private void Awake()
     {
@@ -134,15 +146,48 @@ public class BoardManager : MonoBehaviour
         switch (_playerCard.GetCardType())
         {
             case CARD_TYPE.ENEMY:
-                GameManager.Instance.LoadScene(SCENES.COMBAT);
+                GameManager.Instance.LoadAditiveScene("Combat");
                 break;
             case CARD_TYPE.REWARD:
-                GameManager.Instance.LoadScene(SCENES.REWARD);
+                GameManager.Instance.LoadAditiveScene("Reward");
                 break;
             case CARD_TYPE.BLOCK:
                 break;
             case CARD_TYPE.NULL:
                 break;
         }
+    }
+
+    private void OnSceneChange(SCENES sCENES)
+    {
+        if (sCENES.Equals(SCENES.GAME) && _cards.Count > 0)
+        {
+            //LoadSceneMode();
+        }
+    }
+
+    private void LoadSceneMode()
+    {
+        Vector2 topLeftWorld = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
+        Vector2 cardSize = _cardPrefab.GetComponent<SpriteRenderer>().bounds.size;
+        float offsetX = cardSize.x + _spacingX;
+        float offsetY = cardSize.y + _spacingY;
+
+        for (int i = 0; i < _collumns; i++)
+        {
+            for (int j = 0; j < _rows; j++)
+            {
+                Vector2 pos = new Vector2(
+                    topLeftWorld.x + offsetX * i + cardSize.x / 2,
+                    topLeftWorld.y + offsetY * j + cardSize.y / 2
+                );
+
+                GameObject card = Instantiate(_cardPrefab, pos, Quaternion.identity, transform);
+                MapCard mapCard = card.GetComponent<MapCard>();
+                mapCard.SetUp(this, new Vector2Int(i, j));
+                _cards.Add(mapCard);
+            }
+        }
+        SetPlayerOnTheCenter();
     }
 }

@@ -16,7 +16,7 @@ MonoBehaviour:
   _cardDescription: The fierce Cacique of the Venezuelan mountains, Guaicaipuro united
     tribes and stood bravely against the Spanish conquest. His spirit lives on in
     every strike from the shadows of the forest.
-  _cardImage: {fileID: 21300000, guid: 34f05ab5aaec8414097a4941998ebc39, type: 3}
+  _cardImage: {fileID: 21300000, guid: 1d41f5bbbf1e3f2459b91d21cb007270, type: 3}
   _damage: 5
   _block: 5
   _life: 10

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -12,32 +13,57 @@ public class BaseCardOG : MonoBehaviour
     private TextMeshPro _title;
 
     [SerializeField]
-    private SpriteRenderer _spriteRenderer; 
+    private SpriteRenderer _spriteRenderer;
+
+    private bool _selected = false;
+
+    private Vector2 _initPos;
+
+    private void Start()
+    {
+        _initPos = transform.position;
+    }
 
     public void Initialize(BaseCardSO card)
     {
+        if (!card) return;
         _title.text = card._cardName;
         _spriteRenderer.sprite = card._cardImage;
     }
 
-    private void OnMouseEnter()
+    public void Initialize(BaseCardHUD hudCard)
     {
-        OnCLickOnCard();   
+        _title.text = hudCard.GetName();
+        _spriteRenderer.sprite = hudCard.GetSpriteFromRawImage();
+    }
+
+    private void OnMouseUpAsButton()
+    {
+        _selected = true;
+        _spriteRenderer.material.color = Color.gray;
+        CombatActions.OnCardOGSelected?.Invoke(this);
+        transform.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
     }
 
     private void OnMouseOver()
     {
-        transform.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
+        if(!_selected)
+            transform.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
     }
 
     private void OnMouseExit()
     {
-        transform.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        if (!_selected)
+        {
+            transform.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+            transform.position = _initPos;
+        }
     }
 
-
-    private void OnCLickOnCard()
+    public void UnSelecCard()
     {
-
+        _selected = false;
+        _spriteRenderer.material.color = Color.white;
+        transform.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 }

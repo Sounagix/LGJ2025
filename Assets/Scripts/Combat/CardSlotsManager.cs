@@ -17,10 +17,10 @@ public class CardSlotsManager : MonoBehaviour
     private SpriteRenderer _spriteRenderer;
 
     private List<GameObject> _slots = new List<GameObject>();
-    private List<bool> _slotsStatus = new List<bool>{ false, false, false, false, false };
+    private List<bool> _slotsStatus = new List<bool>{ true, true, true, true, true };
 
 
-private void Awake()
+    private void Awake()
     {
         _spriteRenderer = GetComponent<SpriteRenderer>();
     }
@@ -54,6 +54,32 @@ private void Awake()
         int index = _slots.Count / 2;
         GameObject mainCard = Instantiate(_baseCardGOPrefab, _slots[index].transform);
         mainCard.GetComponent<BaseCardOG>().Initialize(Player.Instance.GetMainCard());
+        _slotsStatus[index] = false;
+    }
+
+    public List<GameObject> GetSlots()
+    {
+        return _slots;
+    }
+
+    public bool IsSlotFree(GameObject slot)
+    {
+        if (slot.CompareTag("Slot") && _slots.Contains(slot))
+        {
+            int index = _slots.IndexOf(slot);
+            return _slotsStatus[index];
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public void AddGameCardFromHudCard(BaseCardHUD hudCard, GameObject slot)
+    {
+        int index = _slots.IndexOf(slot);
+        GameObject newCard = Instantiate(_baseCardGOPrefab, slot.transform);
+        newCard.GetComponent<BaseCardOG>().Initialize(hudCard);
         _slotsStatus[index] = true;
     }
 }

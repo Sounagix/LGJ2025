@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum REWARD_TYPE
@@ -43,7 +44,7 @@ public class RewardManager : MonoBehaviour
         _backButton.onClick.AddListener(
             delegate ()
             {
-                GameManager.Instance.LoadScene(SCENES.GAME);
+                SceneManager.UnloadSceneAsync("Map");
             });
         _backButton.gameObject.SetActive(false);
     }

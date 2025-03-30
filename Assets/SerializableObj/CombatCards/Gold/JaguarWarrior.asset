@@ -16,7 +16,7 @@ MonoBehaviour:
   _cardDescription: "A fierce and agile fighter, channeling the spirit of the jaguar.
     Silent in the jungle, deadly in battle \u2014 he strikes with precision, speed,
     and unmatched courage."
-  _cardImage: {fileID: 21300000, guid: 8f382f0249793d04496c099cc67b8615, type: 3}
+  _cardImage: {fileID: 21300000, guid: a25ea05532ec51448903f75fac336811, type: 3}
   _damage: 10
   _block: 3
   _life: 5
