@@ -1,0 +1,18 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 37840fcf521d98c489f4a1733b0d4ac2, type: 3}
+  m_Name: 1_Vicente the Warrior
+  m_EditorClassIdentifier: 
+  _cardName: Vicente the Warrior
+  _cardDescription: Vicente Guerrero, Mexican Officer during the Mexican Indepedence
+    War
+  _cardImage: {fileID: 21300000, guid: cca0718a5e7d94fe598f629887eac101, type: 3}
