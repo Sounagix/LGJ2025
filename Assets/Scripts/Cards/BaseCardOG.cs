@@ -41,7 +41,7 @@ public class BaseCardOG : MonoBehaviour
     {
         _selected = true;
         _spriteRenderer.material.color = Color.gray;
-        CombatActions.OnCardOGSelected?.Invoke(this);
+        //CombatActions.OnCardOGSelected?.Invoke(this);
         transform.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
     }
 

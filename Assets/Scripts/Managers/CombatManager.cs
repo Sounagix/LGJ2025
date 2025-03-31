@@ -2,88 +2,121 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Experimental.Rendering;
 using UnityEngine.UI;
 
 public static class CombatActions
 {
     public static Action<BaseCardHUD> OnDropDragedCard;
 
-    public static Action<BaseCardOG> OnCardOGSelected;
+    public static Action<BaseCardHUD> OnCardOGSelected;
 } 
 
 
 public class CombatManager : MonoBehaviour
 {
     [SerializeField]
-    private Button _backButton;
-
-    [SerializeField]
     private HandManager _handManager;
 
     [SerializeField]
-    private CardSlotsManager _cardSlotsManager;
+    private CardSlotsManager _playerCardSlotManager;
+
+    [SerializeField]
+    private CardSlotsManager _enemyCardSlotManager;
+
+    [SerializeField]
+    private List<BaseCardSO> _enemiesCards = new();
 
     [SerializeField]
     private float _timeToAttack;
 
-    private BaseCardOG _currentCardSelected;
+    [SerializeField]
+    private float _timeToStart;
 
-    private BaseCardOG _currentTargetSelected;
+    [SerializeField]
+    private BaseCardSO _mainCardTest;
+
+    private Coroutine _startCoroutine = null;
+
+    private BaseCardHUD _currentCardSelected;
+
+    private BaseCardHUD _currentTargetSelected;
 
     private void OnEnable()
     {
         CombatActions.OnDropDragedCard += OnDropDragedCard;
         CombatActions.OnCardOGSelected += OnCardOGSelected;
+        GameManagerActions.OnGameStateChange?.Invoke(GAME_STATE.COMBAT_STATE);
+        _startCoroutine = StartCoroutine(WaitForStart());
     }
 
     private void OnDisable()
     {
         CombatActions.OnDropDragedCard -= OnDropDragedCard;
         CombatActions.OnCardOGSelected -= OnCardOGSelected;
+        GameManagerActions.OnGameStateChange?.Invoke(GAME_STATE.MAP_STATE);
     }
 
-    private void Awake()
+    private IEnumerator WaitForStart()
     {
-        _backButton.onClick.AddListener(() => GameManager.Instance.LoadScene(SCENES.GAME));
+        yield return new WaitForSeconds(_timeToStart);
+        AddPlayerCard();
+        CreateEnemies();
+        _startCoroutine = null;
+    }
+
+    private void AddPlayerCard()
+    {
+        BaseCardSO main = Player.Instance.GetMainCard();
+        if (main == null)
+            main = _mainCardTest;
+        _playerCardSlotManager.CreateMainCard(main);
+    }
+    private void CreateEnemies()
+    {
+        _enemyCardSlotManager.CreateDeckCard(_enemiesCards);
     }
 
     private void OnDropDragedCard(BaseCardHUD droppedHUD)
     {
-        Vector3[] corners = new Vector3[4];
-        RectTransform droppedHUDRectTransform = droppedHUD.GetComponent<RectTransform>();
-
-        droppedHUDRectTransform.GetWorldCorners(corners);
-
-        bool foundSlot = false;
+        RectTransform cardRT = droppedHUD.GetComponent<RectTransform>();
+        List<RectTransform> slotsRT = _playerCardSlotManager.GetSlots();
         int cont = 0;
-
+        bool finded = false;
         do
         {
-            Vector2 worldPoint = Camera.main.ScreenToWorldPoint(corners[cont]) ;
-            RaycastHit2D hit = Physics2D.Raycast(worldPoint, Vector2.zero);
+            Rect rectA = GetWorldRect(cardRT);
+            Rect rectB = GetWorldRect(slotsRT[cont]);
 
-            if (hit.collider != null && hit.collider.CompareTag("Slot") 
-                && _cardSlotsManager.IsSlotFree(hit.collider.gameObject))
-            {
-                ConvertHUDCardToGameCard(droppedHUD, hit.collider.gameObject);
-                foundSlot = true;
-            }
-
-            cont++;
+            finded = rectA.Overlaps(rectB);
+            cont = !finded ? cont + 1 : cont;
         }
-        while (!foundSlot && cont < 4);
+        while (!finded && cont < slotsRT.Count);
 
-        if (!foundSlot)
+        if (finded && _playerCardSlotManager.IsSlotFree(cont))
+        {
+            _playerCardSlotManager.SetSlotAsUsed(cont);
+            droppedHUD.SetCardOnSlot(slotsRT[cont].transform);
+        }
+        else
+        {
             droppedHUD.NotSelectedOnSlot();
+        }
     }
 
-    private void ConvertHUDCardToGameCard(BaseCardHUD hudCard, GameObject slot)
+    public static Rect GetWorldRect(RectTransform rt)
     {
-        _cardSlotsManager.AddGameCardFromHudCard(hudCard, slot);
-        _handManager.RemoveCardFromHand(hudCard);
+        Vector3[] corners = new Vector3[4];
+        rt.GetWorldCorners(corners);
+
+        Vector3 bottomLeft = corners[0];
+        Vector3 topRight = corners[2];
+        Vector2 size = topRight - bottomLeft;
+
+        return new Rect(bottomLeft, size);
     }
 
-    private void OnCardOGSelected(BaseCardOG oG)
+    private void OnCardOGSelected(BaseCardHUD oG)
     {
         if (!IsAllyCard(oG))
         {
@@ -110,11 +143,17 @@ public class CombatManager : MonoBehaviour
         }
     }
 
+    private bool IsAllyCard(BaseCardHUD card)
+    {
+        return !card.CompareTag("EnemyCard");
+    }
+
+    
     private void AttackEnemyCard()
     {
         StartCoroutine(MoveCard(_currentCardSelected, _currentTargetSelected.transform.position, _timeToAttack));
     }
-
+    
     private void OnArriveToEnemyPosition()
     {
         _currentCardSelected.UnSelecCard();
@@ -122,17 +161,11 @@ public class CombatManager : MonoBehaviour
         _currentCardSelected = null;
         _currentTargetSelected = null;
     }
-
-    private bool IsAllyCard(BaseCardOG card)
-    {
-        return !card.CompareTag("EnemyCard");
-    }
-
-    private IEnumerator MoveCard(BaseCardOG baseCardOG, Vector2 target, float duration)
+    private IEnumerator MoveCard(BaseCardHUD baseCardOG, Vector2 target, float duration)
     {
         Vector2 startPos = baseCardOG.transform.position;
         float elapsed = 0f;
-
+    
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
@@ -140,9 +173,9 @@ public class CombatManager : MonoBehaviour
             baseCardOG.transform.position = Vector2.Lerp(startPos, target, t);
             yield return null;
         }
-
+    
         baseCardOG.transform.position = target; // asegúrate de terminar exactamente en el destino
-
+    
         startPos = baseCardOG.transform.position;
         target = baseCardOG.transform.parent.transform.position;
         elapsed = 0f;

@@ -37,16 +37,12 @@ public class BoardManager : MonoBehaviour
     private Coroutine _playerMovement;
 
     public static BoardManager Instance;
+    
+    [SerializeField]
+    private GameObject _rewardPanel;
 
-    private void OnEnable()
-    {
-        GameManagerActions.OnSceneChange += OnSceneChange;
-    }
-
-    private void OnDisable()
-    {
-        GameManagerActions.OnSceneChange -= OnSceneChange;
-    }
+    [SerializeField]
+    private GameObject _combatPanel;
 
     private void Awake()
     {
@@ -63,6 +59,7 @@ public class BoardManager : MonoBehaviour
 
     private void Start()
     {
+        GameManagerActions.OnGameStateChange?.Invoke(GAME_STATE.MAP_STATE);
         CreateBoard();
     }
 
@@ -103,7 +100,7 @@ public class BoardManager : MonoBehaviour
             _playerCard = _cards[centerIndex];
         }
     }
-    private IEnumerator MovePlayer(Vector2 target, float duration, BoardManager boardManager)
+    private IEnumerator MovePlayer(Vector2 target, float duration)
     {
         float elapsed = 0f;
         Vector2 start = _playerBody.position;
@@ -116,8 +113,8 @@ public class BoardManager : MonoBehaviour
             yield return null;
         }
 
-        transform.position = target;
-        boardManager.OnPlayerMovementFinished();
+        _playerBody.transform.position = target;
+        OnPlayerMovementFinished();
     }
 
 
@@ -126,7 +123,7 @@ public class BoardManager : MonoBehaviour
         if (_playerMovement == null && IsAdjacent(_playerCard.GetIndex(), mapCard.GetIndex()))
         {
             _playerCard.OnCardUnSelected();
-            _playerMovement = StartCoroutine(MovePlayer(mapCard.transform.position, _displacementDuration, this));
+            _playerMovement = StartCoroutine(MovePlayer(mapCard.transform.position, _displacementDuration));
             _playerCard = mapCard;
             _playerCard.OnCardSelected();
         }   
@@ -146,23 +143,15 @@ public class BoardManager : MonoBehaviour
         switch (_playerCard.GetCardType())
         {
             case CARD_TYPE.ENEMY:
-                GameManager.Instance.LoadAditiveScene("Combat");
+                _combatPanel.SetActive(true);
                 break;
             case CARD_TYPE.REWARD:
-                GameManager.Instance.LoadAditiveScene("Reward");
+                _rewardPanel.SetActive(true);
                 break;
             case CARD_TYPE.BLOCK:
                 break;
             case CARD_TYPE.NULL:
                 break;
-        }
-    }
-
-    private void OnSceneChange(SCENES sCENES)
-    {
-        if (sCENES.Equals(SCENES.GAME) && _cards.Count > 0)
-        {
-            //LoadSceneMode();
         }
     }
 

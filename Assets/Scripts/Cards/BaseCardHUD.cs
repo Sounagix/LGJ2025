@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -19,6 +20,12 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
 
     private Vector2 _initialAnchoredPosition;
 
+    private bool blocked = false;
+
+    private Image _cardImg;
+
+    private bool _selected = false;
+
     public void Initialize(BaseCardSO card)
     {
         _cardName.text = card._cardName;
@@ -26,53 +33,66 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
         _image.texture = card._cardImage.texture;
         _baseCardSO = card;
         _initialAnchoredPosition = GetComponent<RectTransform>().anchoredPosition;
+        _cardImg = GetComponent<Image>();
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+        if (!_selected)
+            transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        if (!_selected)
+            transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        switch (GameManager.Instance.GetScene())
+        switch (GameManager.Instance.GetGAME_STATE())
         {
-            case SCENES.INIT_SCENE:
+            case GAME_STATE.SELECTION_STATE:
                 Player.Instance.AddMainCard(_baseCardSO);
-                GameManager.Instance.LoadScene(SCENES.GAME);
+                RewardManagerActions.OnRewardCollected?.Invoke();   
                 break;
-            case SCENES.COMBAT:
+            case GAME_STATE.MAP_STATE:
                 break;
-            case SCENES.REWARD:
+            case GAME_STATE.COMBAT_STATE:
+                _selected = true;
+                _cardImg.color = Color.gray;
+                CombatActions.OnCardOGSelected?.Invoke(this);
+                break;
+            case GAME_STATE.REWARD_STATE:
                 Player.Instance.AddCardToDeck(_baseCardSO);
-                GameManager.Instance.LoadScene(SCENES.GAME);
+                RewardManagerActions.OnRewardCollected?.Invoke();
+                break;
+            case GAME_STATE.NULL:
                 break;
         }
-        
-        
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        if (blocked) return;
         GetComponentInParent<HorizontalLayoutGroup>().enabled = false;
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        if (GameManager.Instance.GetScene().Equals(SCENES.COMBAT))
+        if (blocked) return;
+        if (GameManager.Instance.GetGAME_STATE().Equals(GAME_STATE.COMBAT_STATE))
             transform.position = Input.mousePosition;
     }
 
     public void OnEndDrag(PointerEventData eventData)
     {
-        CombatActions.OnDropDragedCard?.Invoke(this);
+        if (blocked) return;
+        if (GameManager.Instance.GetGAME_STATE().Equals(GAME_STATE.COMBAT_STATE))
+            CombatActions.OnDropDragedCard?.Invoke(this);
     }
+
     public string GetName()
     {
         return _cardName.text;
@@ -94,6 +114,19 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
     public void NotSelectedOnSlot()
     {
         GetComponentInParent<HorizontalLayoutGroup>().enabled = true;
-        //GetComponent<RectTransform>().localPosition = _initialAnchoredPosition;
+    }
+
+    public void SetCardOnSlot(Transform tr)
+    {
+        blocked = true;
+        transform.SetParent(tr);
+        transform.localPosition = Vector3.zero;
+    }
+
+    public void UnSelecCard()
+    {
+        _selected = false;
+        _cardImg.color = Color.white;
+        transform.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 }

@@ -6,9 +6,6 @@ using UnityEngine;
 public class EnemyBoardManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject _slotPrefab;
-
-    [SerializeField]
     private GameObject _cardOGPrefab;
 
     [SerializeField]
@@ -20,19 +17,12 @@ public class EnemyBoardManager : MonoBehaviour
     [SerializeField]
     private List<BaseCardSO> _enemyDeck = new List<BaseCardSO>();
 
-    private SpriteRenderer _spriteRenderer;
-
-    private void Awake()
+    private void OnEnable()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        //CreateSlots();
+        //CreateCard();
     }
 
-
-    private void Start()
-    {
-        CreateSlots();
-        CreateCard();
-    }
 
     private void CreateCard()
     {
@@ -52,7 +42,9 @@ public class EnemyBoardManager : MonoBehaviour
         currentCard.tag = "EnemyCard";
     }
 
-    private void CreateSlots()
+
+
+    /*private void CreateSlots()
     {
         Vector2 sprSize = _spriteRenderer.size;
         float spacing = sprSize.x / (_numberOfSlots + 1); // espacio uniforme entre slots
@@ -68,5 +60,5 @@ public class EnemyBoardManager : MonoBehaviour
             currentSlot.transform.localPosition = localPos;
             _slots.Add(currentSlot);
         }
-    }
+    }*/
 }

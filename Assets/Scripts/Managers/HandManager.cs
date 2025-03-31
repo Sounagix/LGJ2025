@@ -17,10 +17,9 @@ public class HandManager : MonoBehaviour
     [SerializeField]
     private List<BaseCardSO> test = new List<BaseCardSO>();
 
-
-    public void Start()
+    private void OnEnable()
     {
-        //CreateHand();
+        CreateHand();
         TestCreateHand();
     }
 

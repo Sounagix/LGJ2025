@@ -4,10 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-enum GAME_STATE : int
-{
 
-}
 
 public class Player : MonoBehaviour
 {
@@ -17,10 +14,6 @@ public class Player : MonoBehaviour
 
     public static Player Instance { get; private set; }
 
-    private void OnEnable()
-    {
-        GameManagerActions.OnSceneChange += OnSceneLoaded;
-    }
 
     private void Awake()
     {
@@ -45,11 +38,6 @@ public class Player : MonoBehaviour
         _deck.Add(baseCardSO);
     }
 
-    private void OnSceneLoaded(SCENES sCENES)
-    {
-
-    }
-
     public BaseCardSO GetMainCard()
     {
         return _mainCard;
@@ -59,4 +47,6 @@ public class Player : MonoBehaviour
     {
         return _deck;
     }
+
+
 }

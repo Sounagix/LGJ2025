@@ -11,6 +11,11 @@ public enum REWARD_TYPE
     GOLD
 }
 
+public static class RewardManagerActions
+{
+    public static System.Action OnRewardCollected;
+}
+
 public class RewardManager : MonoBehaviour
 {
     [SerializeField]
@@ -31,27 +36,21 @@ public class RewardManager : MonoBehaviour
     [SerializeField]
     private BaseCardHUD _rewardHUDPrefab;
 
-    [SerializeField]
-    private float _timeToBack;
-
-    [SerializeField]
-    private Button _backButton;
-
     private BaseCardSO _rewardCard;
 
-    private void Awake()
+    private BaseCardHUD _currentRewardHUD;
+
+    private void OnEnable()
     {
-        _backButton.onClick.AddListener(
-            delegate ()
-            {
-                SceneManager.UnloadSceneAsync("Map");
-            });
-        _backButton.gameObject.SetActive(false);
+        GameManagerActions.OnGameStateChange?.Invoke(GAME_STATE.REWARD_STATE);
+        RewardManagerActions.OnRewardCollected += OnRewardCollected;
+        GenerateRewards();
     }
 
-    private void Start()
+    private void OnDisable()
     {
-        GenerateRewards();
+        GameManagerActions.OnGameStateChange?.Invoke(GAME_STATE.MAP_STATE);
+        RewardManagerActions.OnRewardCollected -= OnRewardCollected;
     }
 
     private void GenerateRewards()
@@ -75,10 +74,9 @@ public class RewardManager : MonoBehaviour
 
     private void ShowReward()
     {
-        BaseCardHUD currentReward = Instantiate(_rewardHUDPrefab, transform);
-        currentReward.transform.localPosition = Vector3.zero;
-        currentReward.Initialize(_rewardCard);
-        StartCoroutine(BackToMap());
+        _currentRewardHUD = Instantiate(_rewardHUDPrefab, transform);
+        _currentRewardHUD.transform.localPosition = Vector3.zero;
+        _currentRewardHUD.Initialize(_rewardCard);
     }
 
     private void GenerateReward(REWARD_TYPE rEWARD_TYPE)
@@ -97,9 +95,15 @@ public class RewardManager : MonoBehaviour
         }
     }
 
-    private IEnumerator BackToMap()
+    private void BackToMap()
     {
-        yield return new WaitForSeconds(_timeToBack);
-        _backButton.gameObject.SetActive(true);
+        Destroy(_currentRewardHUD.gameObject);
+        _currentRewardHUD = null;
+        gameObject.SetActive(false);
+    }
+
+    private void OnRewardCollected()
+    {
+        BackToMap();
     }
 }

@@ -45,7 +45,8 @@ public class MapCard : MonoBehaviour
 
     private void OnMouseDown()
     {
-        _boardManager.OnCardTouched(this);
+        if(GameManager.Instance.GetGAME_STATE().Equals(GAME_STATE.MAP_STATE))
+            _boardManager.OnCardTouched(this);
     }
 
     public CARD_TYPE GetCardType()
