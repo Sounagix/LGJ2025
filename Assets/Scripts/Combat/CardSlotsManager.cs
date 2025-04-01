@@ -20,9 +20,15 @@ public class CardSlotsManager : MonoBehaviour
 
     private List<RectTransform> _slotRectTransforms = new List<RectTransform>();
 
+    private List<BaseCardHUD> _cards = new List<BaseCardHUD>();
+
     private void Start()
     {
         CreateSlots();
+        for (int i = 0; i < _numOfSlots; i++)
+        {
+            _cards.Add(null);
+        }
     }
 
     private void CreateSlots()
@@ -30,13 +36,32 @@ public class CardSlotsManager : MonoBehaviour
         GameObject slot = transform.GetChild(0).gameObject;
         _slots.Add(slot);
         _slotRectTransforms.Add(slot.GetComponent<RectTransform>());
-        for (int i = 0; i < _numOfSlots; i++)
+        for (int i = 0; i < _numOfSlots - 1; i++)
         {
             GameObject nextSlot = Instantiate(slot, transform);
             _slots.Add(nextSlot);
             _slotRectTransforms.Add(nextSlot.GetComponent<RectTransform>());
         }
     }
+
+    public void BlockSelection()
+    {
+        foreach (BaseCardHUD card in _cards)
+        {
+            if (card)
+                card.BlockCard();
+        }
+    }
+
+    public void UnblockSelection()
+    {
+        foreach (BaseCardHUD card in _cards)
+        {
+            if (card)
+                card.UnSelecCard();
+        }
+    }
+
 
     public bool IsSlotFree(int index)
     {
@@ -48,9 +73,10 @@ public class CardSlotsManager : MonoBehaviour
         return _slotRectTransforms;
     }
 
-    public void SetSlotAsUsed(int index)
+    public void SetSlotAsUsed(BaseCardHUD card, int index)
     {
         _slotsStatus[index] = false;
+        _cards[index] = card;
     }
 
     public void CreateMainCard(BaseCardSO baseCardSO)
@@ -76,14 +102,69 @@ public class CardSlotsManager : MonoBehaviour
     private void CreateHudCard(BaseCardSO card, int index)
     {
         GameObject hudCard = Instantiate(_hudCardPrefab, _slots[index].transform);
-        hudCard.GetComponent<BaseCardHUD>().Initialize(card);
+        BaseCardHUD hud = hudCard.GetComponent<BaseCardHUD>();
+        hud.Initialize(card, this);
+
         hudCard.transform.SetParent(_slots[index].transform);
         hudCard.transform.localPosition = Vector3.zero;
         hudCard.tag = _cardTag;
         _slotsStatus[index] = false;
+        _cards[index] = hud;
     }
 
+    public BaseCardHUD GetRandomCard()
+    {
+        bool validCard = false;
+        int index = 0;
+        List<BaseCardHUD> cardsAvarible = _cards.FindAll(c => c != null);
+        if (cardsAvarible.Count == 0)
+            throw new Exception("No cards! on the deck");
 
+        do
+        {
+            index = UnityEngine.Random.Range(0, cardsAvarible.Count);
+            validCard = cardsAvarible[index];
+        }
+        while (!validCard);
+
+        return cardsAvarible[index];
+    }
+
+    public void KillCard(BaseCardHUD defender)
+    {
+        if (_cards.Contains(defender))
+        {
+            defender.BlockCard();
+            defender.KillCard();
+        }
+    }
+
+    public void DestroyCard(BaseCardHUD card)
+    {
+        int index = _cards.IndexOf(card);
+        _slotsStatus[index] = true;
+        _cards[index] = null;
+        Destroy(card.gameObject);
+    }
+
+    public bool HaveCards()
+    {
+        return _cards.FindAll(c => c != null).Count > 0;
+    }
+
+    public void Clean()
+    {
+
+        for (int i = 0; i < _numOfSlots; i++)
+        {
+            _slotsStatus[i] = true;
+            if (_cards[i] != null)
+            {
+                Destroy(_cards[i].gameObject);
+                _cards[i] = null;
+            }
+        }
+    }
 
     /*private void CreateSlots()
     {

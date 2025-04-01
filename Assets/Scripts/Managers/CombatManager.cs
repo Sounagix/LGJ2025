@@ -1,8 +1,12 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.Experimental.Rendering;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public static class CombatActions
@@ -11,6 +15,12 @@ public static class CombatActions
 
     public static Action<BaseCardHUD> OnCardOGSelected;
 } 
+
+public enum ATTACK_TYPE : int
+{
+    ALLY,
+    ENEMY
+}
 
 
 public class CombatManager : MonoBehaviour
@@ -34,7 +44,13 @@ public class CombatManager : MonoBehaviour
     private float _timeToStart;
 
     [SerializeField]
+    private float _enemyTimeToWaitForAttack;
+
+    [SerializeField]
     private BaseCardSO _mainCardTest;
+
+    [SerializeField]
+    private DeckManager _deckManager;
 
     private Coroutine _startCoroutine = null;
 
@@ -95,7 +111,7 @@ public class CombatManager : MonoBehaviour
 
         if (finded && _playerCardSlotManager.IsSlotFree(cont))
         {
-            _playerCardSlotManager.SetSlotAsUsed(cont);
+            _playerCardSlotManager.SetSlotAsUsed(droppedHUD, cont);
             droppedHUD.SetCardOnSlot(slotsRT[cont].transform);
         }
         else
@@ -151,42 +167,151 @@ public class CombatManager : MonoBehaviour
     
     private void AttackEnemyCard()
     {
-        StartCoroutine(MoveCard(_currentCardSelected, _currentTargetSelected.transform.position, _timeToAttack));
+        _playerCardSlotManager.BlockSelection();
+        _enemyCardSlotManager.BlockSelection();
+        StartCoroutine(MoveCard(_currentCardSelected, _currentTargetSelected, _timeToAttack));
     }
     
-    private void OnArriveToEnemyPosition()
+    private void OnBackFromAttack()
     {
         _currentCardSelected.UnSelecCard();
         _currentTargetSelected.UnSelecCard();
         _currentCardSelected = null;
         _currentTargetSelected = null;
+        if (_enemyCardSlotManager.HaveCards())
+        {
+            PrepareEnemyAttack();
+        }
+        else
+        {
+            OnFinishCombat();
+        }
     }
-    private IEnumerator MoveCard(BaseCardHUD baseCardOG, Vector2 target, float duration)
+
+    private IEnumerator MoveCard(BaseCardHUD attacker,BaseCardHUD defender , float duration)
     {
-        Vector2 startPos = baseCardOG.transform.position;
+        Vector2 startPos = attacker.transform.position;
+        Vector2 target = defender.transform.position;
         float elapsed = 0f;
     
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            baseCardOG.transform.position = Vector2.Lerp(startPos, target, t);
+            attacker.transform.position = Vector2.Lerp(startPos, target, t);
             yield return null;
         }
     
-        baseCardOG.transform.position = target; // asegúrate de terminar exactamente en el destino
-    
-        startPos = baseCardOG.transform.position;
-        target = baseCardOG.transform.parent.transform.position;
+        attacker.transform.position = target; // asegúrate de terminar exactamente en el destino
+
+        ApplicateDamage(attacker, defender, ATTACK_TYPE.ALLY);
+
+        startPos = attacker.transform.position;
+        target = attacker.transform.parent.transform.position;
         elapsed = 0f;
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
             float t = Mathf.Clamp01(elapsed / duration);
-            baseCardOG.transform.position = Vector2.Lerp(startPos, target, t);
+            attacker.transform.position = Vector2.Lerp(startPos, target, t);
             yield return null;
         }
-        baseCardOG.transform.position = target;
-        OnArriveToEnemyPosition();
+        attacker.transform.position = target;
+        OnBackFromAttack();
+    }
+
+    private void PrepareEnemyAttack()
+    {
+        BaseCardHUD enemyCardSelected = SelectStrategy();
+        BaseCardHUD cardToAttack = SelectCardToAttack();
+        StartCoroutine(MoveEnemyCard(enemyCardSelected, cardToAttack, _timeToStart));
+    }
+
+    private BaseCardHUD SelectStrategy()
+    {
+        return _enemyCardSlotManager.GetRandomCard();
+    }
+
+    private BaseCardHUD SelectCardToAttack()
+    {
+        return _playerCardSlotManager.GetRandomCard();
+    }
+
+    private IEnumerator MoveEnemyCard(BaseCardHUD attacker, BaseCardHUD defender, float duration)
+    {
+        yield return new WaitForSecondsRealtime(_enemyTimeToWaitForAttack);
+        Vector2 target = defender.transform.position;
+        Vector2 startPos = attacker.transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            attacker.transform.position = Vector2.Lerp(startPos, target, t);
+            yield return null;
+        }
+
+        attacker.transform.position = target; // asegúrate de terminar exactamente en el destino
+
+        // Aplicar daños
+        ApplicateDamage(attacker, defender, ATTACK_TYPE.ENEMY);
+
+        startPos = attacker.transform.position;
+        target = attacker.transform.parent.transform.position;
+        elapsed = 0f;
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = Mathf.Clamp01(elapsed / duration);
+            attacker.transform.position = Vector2.Lerp(startPos, target, t);
+            yield return null;
+        }
+        attacker.transform.position = target;
+        OnEnemyAttackFinish();
+    }
+
+    private void OnEnemyAttackFinish()
+    {
+        _playerCardSlotManager.UnblockSelection();
+        _enemyCardSlotManager.UnblockSelection();
+        if (!_playerCardSlotManager.HaveCards())
+        {
+            // TODO GameOver status
+            GameManager.Instance.LoadScene(SCENES.MAIN_MENU);
+        }
+    }
+
+    private void ApplicateDamage(BaseCardHUD attacker, BaseCardHUD defender, ATTACK_TYPE aTTACK_TYPE)
+    {
+        int attackDamage = attacker.GetDamage();
+        int defPoints = defender.GetDefensePoints();
+        bool kill = false;
+        if (attackDamage - defPoints > 0)
+            kill = defender.SubtractLife(attackDamage - defPoints);
+
+        if (kill)
+        {
+            if (aTTACK_TYPE.Equals(ATTACK_TYPE.ALLY))
+            {
+                _enemyCardSlotManager.KillCard(defender);
+            }
+            else
+            {
+                _playerCardSlotManager.KillCard(defender);
+                _deckManager.RemoveCard(defender);
+            }
+        }
+    }
+
+    private void OnFinishCombat()
+    {
+        _currentCardSelected = null;
+        _currentTargetSelected = null;
+        _playerCardSlotManager.Clean();
+        _enemyCardSlotManager.Clean();
+        _handManager.Clean();
+        gameObject.SetActive(false);
+        _deckManager.Clean();
     }
 }

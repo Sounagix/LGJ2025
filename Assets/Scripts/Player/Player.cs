@@ -48,5 +48,11 @@ public class Player : MonoBehaviour
         return _deck;
     }
 
+    public void RemoveCard(string name)
+    {
+        BaseCardSO card = _deck.Find(c => c._cardName == name);
+        if (card)
+            _deck.Remove(card);
+    }
 
 }

@@ -376,9 +376,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _initialCardPrefab: {fileID: 4456910734757898141, guid: cb83644e305cb09419159e05c4d83713, type: 3}
   _initialCards:
-  - {fileID: 11400000, guid: eb8d9c8c7cff6d4489b41bc09d45e9ad, type: 2}
-  - {fileID: 11400000, guid: c0e51490fa97d4f429f8f8bb2e265743, type: 2}
-  - {fileID: 11400000, guid: c235f13a30393fd40a5028c5ebaf7e6d, type: 2}
+  - {fileID: 11400000, guid: a63e2ea4d8929ea4d92e92d60f2e50a1, type: 2}
+  - {fileID: 11400000, guid: 2638f8c136c959547899212f2203c159, type: 2}
+  - {fileID: 11400000, guid: ae083af6b8425ba42a7dfecb6882a6a3, type: 2}
 --- !u!114 &1251497274
 MonoBehaviour:
   m_ObjectHideFlags: 0

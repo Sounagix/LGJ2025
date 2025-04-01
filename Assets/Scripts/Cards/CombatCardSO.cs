@@ -6,11 +6,12 @@ using UnityEngine;
 public class CombatCardSO : BaseCardSO
 {
     [SerializeField]
-    private int _damage;
+    public int _damage;
 
     [SerializeField]
-    private int _block;
+    public int _block;
 
     [SerializeField]
-    private int _life;
+    public int _life;
+
 }

@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -26,14 +27,33 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
 
     private bool _selected = false;
 
-    public void Initialize(BaseCardSO card)
+    private int _attackDamage;
+
+    private int _lifePoints;
+
+    private int _defensePoints;
+
+    private CardSlotsManager _cardSlotsManager;
+
+    private bool _rdyForDestroy = false;
+
+    public void Initialize(BaseCardSO card, CardSlotsManager cardSlotsManager = null)
     {
+        _cardSlotsManager = cardSlotsManager;
         _cardName.text = card._cardName;
         _cardDescription.text = card._cardDescription;
         _image.texture = card._cardImage.texture;
         _baseCardSO = card;
         _initialAnchoredPosition = GetComponent<RectTransform>().anchoredPosition;
         _cardImg = GetComponent<Image>();
+
+        CombatCardSO combatCardSO = card as CombatCardSO;
+        if (combatCardSO)
+        {
+            _attackDamage = combatCardSO._damage;
+            _lifePoints = combatCardSO._life;
+            _defensePoints = combatCardSO._block;
+        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -93,6 +113,16 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
             CombatActions.OnDropDragedCard?.Invoke(this);
     }
 
+    public void BlockCard()
+    {
+        blocked = true;
+    }
+
+    public void UnlockCard()
+    {
+        blocked = false;
+    }
+
     public string GetName()
     {
         return _cardName.text;
@@ -118,15 +148,45 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
 
     public void SetCardOnSlot(Transform tr)
     {
-        blocked = true;
         transform.SetParent(tr);
         transform.localPosition = Vector3.zero;
     }
 
     public void UnSelecCard()
     {
+        if (_rdyForDestroy)
+        {
+            _cardSlotsManager.DestroyCard(this);
+            return;
+        }
         _selected = false;
         _cardImg.color = Color.white;
         transform.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+    }
+
+    public int GetDamage()
+    {
+        return _attackDamage;
+    }
+
+    public int GetLifePoints()
+    {
+        return _lifePoints;
+    }
+
+    public int GetDefensePoints()
+    {
+        return _defensePoints;
+    }
+
+    public bool SubtractLife(int value)
+    {
+        _lifePoints -= value;
+        return _lifePoints <= 0;
+    }
+
+    public void KillCard()
+    {
+        _rdyForDestroy = true;
     }
 }

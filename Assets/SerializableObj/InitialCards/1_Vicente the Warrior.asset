@@ -9,10 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37840fcf521d98c489f4a1733b0d4ac2, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c4529ecaae64884ea610539efae523b, type: 3}
   m_Name: 1_Vicente the Warrior
   m_EditorClassIdentifier: 
   _cardName: Vicente the Warrior
   _cardDescription: Vicente Guerrero, Mexican Officer during the Mexican Indepedence
     War
   _cardImage: {fileID: 21300000, guid: cca0718a5e7d94fe598f629887eac101, type: 3}
+  _damage: 10
+  _block: 10
+  _life: 20

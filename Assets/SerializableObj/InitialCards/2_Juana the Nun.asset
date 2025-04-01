@@ -9,9 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 37840fcf521d98c489f4a1733b0d4ac2, type: 3}
+  m_Script: {fileID: 11500000, guid: 5c4529ecaae64884ea610539efae523b, type: 3}
   m_Name: 2_Juana the Nun
   m_EditorClassIdentifier: 
   _cardName: Juana the Nun
   _cardDescription: A hispanic Nun, inspired by Sor Juana Ines de la Cruz
   _cardImage: {fileID: 21300000, guid: 9d3e39d8742d64f42973543fb4bb4be3, type: 3}
+  _damage: 10
+  _block: 10
+  _life: 20
