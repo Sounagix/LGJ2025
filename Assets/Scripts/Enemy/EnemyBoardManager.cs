@@ -5,17 +5,10 @@ using UnityEngine;
 
 public class EnemyBoardManager : MonoBehaviour
 {
-    [SerializeField]
-    private GameObject _cardOGPrefab;
+    private List<CombatCardSO> _enemyDeck = new List<CombatCardSO>();
 
     [SerializeField]
-    private int _numberOfSlots;
-
-    [SerializeField]
-    private List<GameObject> _slots = new List<GameObject>();
-
-    [SerializeField]
-    private List<BaseCardSO> _enemyDeck = new List<BaseCardSO>();
+    private CardSlotsManager _slotsManager;
 
     private void OnEnable()
     {
@@ -23,24 +16,11 @@ public class EnemyBoardManager : MonoBehaviour
         //CreateCard();
     }
 
-
-    private void CreateCard()
+    public void SetCards(List<BaseCardSO> cards)
     {
-        int cont = 0;
-        foreach (var card in _enemyDeck)
-        {
-            CreateCards(card, _slots[cont]);
-            cont++;
-        }
+        _slotsManager.CreateDeckCard(cards);
     }
 
-    private void CreateCards(BaseCardSO card, GameObject slot)
-    {
-        GameObject currentCard = Instantiate(_cardOGPrefab, slot.transform);
-        currentCard.transform.position = slot.transform.position + -Vector3.forward * 1.2f;
-        currentCard.GetComponent<BaseCardOG>().Initialize(card);
-        currentCard.tag = "EnemyCard";
-    }
 
 
 

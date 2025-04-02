@@ -144,6 +144,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d97fd554124b9446a10b5d553ca97b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _numOfCards: 5
+  _rewardsChance: 1
+  _enemychance: 5
+  _maxChance: 10
+  _ironCards:
+  - {fileID: 11400000, guid: d79fefe5c398a495ab09f10d848c8faa, type: 2}
+  - {fileID: 11400000, guid: 5e7e5381ed9084fa4986cbf3b2c01069, type: 2}
+  - {fileID: 11400000, guid: 0658da9078c67439b8bdd1a402c67e8b, type: 2}
+  - {fileID: 11400000, guid: 2ac4d3fa5fbff4e4b88b4299843a7d67, type: 2}
+  - {fileID: 11400000, guid: c9fe7838f5ef041b09c92447769efbbf, type: 2}
+  - {fileID: 11400000, guid: df4d1ae14ab38274c8d3724e752fb58d, type: 2}
+  _silverCards:
+  - {fileID: 11400000, guid: dfb273a4308434fa48b70fd02ae5288a, type: 2}
+  - {fileID: 11400000, guid: 283efd3fbd50c4cccad523333b347019, type: 2}
+  - {fileID: 11400000, guid: 7b7bada5583ae461daa4f478083c7bc8, type: 2}
+  - {fileID: 11400000, guid: 31a10f41df0b04314b318e6bcd708037, type: 2}
+  - {fileID: 11400000, guid: 6ddc5f1c044ab4859a53ddd707c7a9ab, type: 2}
+  - {fileID: 11400000, guid: 1a9939b18eabe0842bd9ed630f8d1995, type: 2}
+  _goldCards:
+  - {fileID: 11400000, guid: 2483bc66aea1e4be59c3b774964c4922, type: 2}
+  - {fileID: 11400000, guid: e23ad83dc24e04fe596dd59644bc5ccf, type: 2}
+  - {fileID: 11400000, guid: 9439571f35154447d864dd07d2c947bb, type: 2}
+  - {fileID: 11400000, guid: 63dc468353e6b4de9927fec0470b8f93, type: 2}
+  - {fileID: 11400000, guid: b24b5647c3cdb43b9a9bb28a92987cdb, type: 2}
+  - {fileID: 11400000, guid: c9d0c8dbef188bb46a612881a7c31a90, type: 2}
 --- !u!1 &4794082696299402527
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,8 +280,8 @@ Transform:
   m_GameObject: {fileID: 6096660249295992266}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.11, y: 0.11, z: 0.11}
+  m_LocalPosition: {x: -0.0043, y: -0.00108, z: 0}
+  m_LocalScale: {x: 0.15342811, y: 0.07787956, z: 0.11}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6846172963464594044}
@@ -302,7 +327,7 @@ SpriteRenderer:
   m_SortingLayerID: -1068739315
   m_SortingLayer: 1
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: b099290f62419c24ebbeec78e88da3a1, type: 3}
+  m_Sprite: {fileID: 21300000, guid: d029f43ae87e0b741b8899e20d5c6635, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

@@ -8,7 +8,8 @@ public enum REWARD_TYPE
 {
     IRON,
     SILVER,
-    GOLD
+    GOLD,
+    SIZE
 }
 
 public static class RewardManagerActions
