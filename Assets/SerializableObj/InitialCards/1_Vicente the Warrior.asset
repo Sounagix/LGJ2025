@@ -15,7 +15,7 @@ MonoBehaviour:
   _cardName: Vicente the Warrior
   _cardDescription: Vicente Guerrero, Mexican Officer during the Mexican Indepedence
     War
-  _cardImage: {fileID: 21300000, guid: cca0718a5e7d94fe598f629887eac101, type: 3}
-  _damage: 10
-  _block: 10
-  _life: 20
+  _cardImage: {fileID: 21300000, guid: 1161041ebfc8a410588a76e8ce4caeba, type: 3}
+  _damage: 5
+  _block: 2
+  _life: 25

@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardName: Chema the Sabandija
   _cardDescription: A street tug, inspired by the Chicano/Cholo Culture
-  _cardImage: {fileID: 21300000, guid: 7902794f0644b4989b9d129327f04c9a, type: 3}
-  _damage: 10
-  _block: 10
-  _life: 20
+  _cardImage: {fileID: 21300000, guid: d03aea6915c8a415cb776f365bbb8748, type: 3}
+  _damage: 7
+  _block: 0
+  _life: 25
