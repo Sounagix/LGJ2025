@@ -1823,6 +1823,7 @@ MonoBehaviour:
   _playerBody: {fileID: 1257080586}
   _rewardPanel: {fileID: 1158078089}
   _combatPanel: {fileID: 1591019626}
+  _combatManager: {fileID: 1591019628}
 --- !u!1 &1509305792
 GameObject:
   m_ObjectHideFlags: 0

@@ -58,7 +58,7 @@ public class CardSlotsManager : MonoBehaviour
         foreach (BaseCardHUD card in _cards)
         {
             if (card)
-                card.UnSelecCard();
+                card.UnlockCard();
         }
     }
 
