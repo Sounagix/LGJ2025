@@ -44,6 +44,9 @@ public class BoardManager : MonoBehaviour
     [SerializeField]
     private GameObject _combatPanel;
 
+    [SerializeField]
+    private CombatManager _combatManager;
+
     private void Awake()
     {
         if(Instance == null)
@@ -144,6 +147,7 @@ public class BoardManager : MonoBehaviour
         {
             case CARD_TYPE.ENEMY:
                 _combatPanel.SetActive(true);
+                _combatManager.SetEnemyCards(_playerCard);
                 break;
             case CARD_TYPE.REWARD:
                 _rewardPanel.SetActive(true);
@@ -153,6 +157,7 @@ public class BoardManager : MonoBehaviour
             case CARD_TYPE.NULL:
                 break;
         }
+        _playerCard.ChangeToBlock();
     }
 
     private void LoadSceneMode()

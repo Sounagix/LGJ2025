@@ -1,13 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
-using UnityEngine.Experimental.Rendering;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
+
 
 public static class CombatActions
 {
@@ -58,6 +53,8 @@ public class CombatManager : MonoBehaviour
 
     private BaseCardHUD _currentTargetSelected;
 
+    private MapCard _mapCard;
+
     private void OnEnable()
     {
         CombatActions.OnDropDragedCard += OnDropDragedCard;
@@ -90,7 +87,7 @@ public class CombatManager : MonoBehaviour
     }
     private void CreateEnemies()
     {
-        _enemyCardSlotManager.CreateDeckCard(_enemiesCards);
+        _enemyCardSlotManager.CreateDeckCard(_mapCard.GetCards());
     }
 
     private void OnDropDragedCard(BaseCardHUD droppedHUD)
@@ -313,5 +310,10 @@ public class CombatManager : MonoBehaviour
         _handManager.Clean();
         gameObject.SetActive(false);
         _deckManager.Clean();
+    }
+
+    public void SetEnemyCards(MapCard mapCard)
+    {
+        _mapCard = mapCard;
     }
 }

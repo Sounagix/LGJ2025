@@ -12,6 +12,9 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
     private TextMeshProUGUI _cardName, _cardDescription;
 
     [SerializeField]
+    private TextMeshProUGUI _hpText, _blockText, _attackText;
+
+    [SerializeField]
     private RawImage _image;
 
     [SerializeField]
@@ -37,6 +40,8 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
 
     private bool _rdyForDestroy = false;
 
+    private bool _cardOnGame = false;
+
     public void Initialize(BaseCardSO card, CardSlotsManager cardSlotsManager = null)
     {
         _cardSlotsManager = cardSlotsManager;
@@ -53,28 +58,34 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
             _attackDamage = combatCardSO._damage;
             _lifePoints = combatCardSO._life;
             _defensePoints = combatCardSO._block;
+            _hpText.text = _lifePoints.ToString();
+            _blockText.text = _defensePoints.ToString();
+            _attackText.text = _attackDamage.ToString();
         }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
+        if (blocked) return;
         if (!_selected)
             transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
+        if (blocked) return;
         if (!_selected)
             transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 
     public void OnPointerClick(PointerEventData eventData)
     {
+        if (blocked || _cardOnGame) return;
         switch (GameManager.Instance.GetGAME_STATE())
         {
             case GAME_STATE.SELECTION_STATE:
                 Player.Instance.AddMainCard(_baseCardSO);
-                RewardManagerActions.OnRewardCollected?.Invoke();   
+                GameManager.Instance.LoadScene(SCENES.GAME);  
                 break;
             case GAME_STATE.MAP_STATE:
                 break;
@@ -148,6 +159,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
 
     public void SetCardOnSlot(Transform tr)
     {
+        _cardOnGame = true;
         transform.SetParent(tr);
         transform.localPosition = Vector3.zero;
     }
@@ -182,6 +194,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
     public bool SubtractLife(int value)
     {
         _lifePoints -= value;
+        _hpText.text = _lifePoints.ToString();
         return _lifePoints <= 0;
     }
 
