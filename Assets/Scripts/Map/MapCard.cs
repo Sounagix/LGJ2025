@@ -57,7 +57,7 @@ public class MapCard : MonoBehaviour
 
     private void SetUpCard()
     {
-        _cARDVALUE = (REWARD_TYPE)UnityEngine.Random.Range(0, (int)REWARD_TYPE.SIZE);
+        _cARDVALUE = (REWARD_TYPE)UnityEngine.Random.Range(1, (int)REWARD_TYPE.SIZE);
         float chance = UnityEngine.Random.Range(0, _maxChance);
         if (chance <= _rewardsChance)
         {
