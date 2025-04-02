@@ -1,14 +1,17 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Reflection;
 using UnityEngine;
 
 
 public static class CombatActions
 {
-    public static Action<BaseCardHUD> OnDropDragedCard;
-
     public static Action<BaseCardHUD> OnCardOGSelected;
+
+    public static Action<HealingCardHUD> OnHealingCardDroped;
+
+    public static Action<CombatCardHUD> OnCombatCardDroped;
 } 
 
 public enum ATTACK_TYPE : int
@@ -57,16 +60,18 @@ public class CombatManager : MonoBehaviour
 
     private void OnEnable()
     {
-        CombatActions.OnDropDragedCard += OnDropDragedCard;
         CombatActions.OnCardOGSelected += OnCardOGSelected;
+        CombatActions.OnCombatCardDroped += OnCombatCardDroped;
+        CombatActions.OnHealingCardDroped += OnHealingCardDrop;
         GameManagerActions.OnGameStateChange?.Invoke(GAME_STATE.COMBAT_STATE);
         _startCoroutine = StartCoroutine(WaitForStart());
     }
 
     private void OnDisable()
     {
-        CombatActions.OnDropDragedCard -= OnDropDragedCard;
+        CombatActions.OnCombatCardDroped -= OnCombatCardDroped;
         CombatActions.OnCardOGSelected -= OnCardOGSelected;
+        CombatActions.OnHealingCardDroped -= OnHealingCardDrop;
         GameManagerActions.OnGameStateChange?.Invoke(GAME_STATE.MAP_STATE);
     }
 
@@ -90,7 +95,26 @@ public class CombatManager : MonoBehaviour
         _enemyCardSlotManager.CreateDeckCard(_mapCard.GetCards());
     }
 
-    private void OnDropDragedCard(BaseCardHUD droppedHUD)
+    private CombatCardHUD OnDropCardOverCombatCard(BaseCardHUD droppedHUD)
+    {
+        RectTransform cardRT = droppedHUD.GetComponent<RectTransform>();
+        List<RectTransform> slotsRT = _playerCardSlotManager.GetCardsOnGame();
+        int cont = 0;
+        bool finded = false;
+        do
+        {
+            Rect rectA = GetWorldRect(cardRT);
+            Rect rectB = GetWorldRect(slotsRT[cont]);
+
+            finded = rectA.Overlaps(rectB);
+            cont = !finded ? cont + 1 : cont;
+        }
+        while (!finded && cont < slotsRT.Count);
+
+        return finded ? slotsRT[cont].GetComponent<CombatCardHUD>() : null;
+    }
+
+    private GameObject OnDropCardOverSlot(BaseCardHUD droppedHUD)
     {
         RectTransform cardRT = droppedHUD.GetComponent<RectTransform>();
         List<RectTransform> slotsRT = _playerCardSlotManager.GetSlots();
@@ -106,14 +130,37 @@ public class CombatManager : MonoBehaviour
         }
         while (!finded && cont < slotsRT.Count);
 
-        if (finded && _playerCardSlotManager.IsSlotFree(cont))
+        return finded ? slotsRT[cont].gameObject : null;
+    }
+
+
+    private void OnCombatCardDroped(CombatCardHUD combatCardHUD)
+    {
+        GameObject slot = OnDropCardOverSlot(combatCardHUD);
+        if (_playerCardSlotManager.IsSlotFree(slot))
         {
-            _playerCardSlotManager.SetSlotAsUsed(droppedHUD, cont);
-            droppedHUD.SetCardOnSlot(slotsRT[cont].transform);
+            _playerCardSlotManager.SetSlotAsUsed(combatCardHUD, slot);
+            combatCardHUD.SetCardOnSlot(slot.transform);
         }
         else
         {
-            droppedHUD.NotSelectedOnSlot();
+            combatCardHUD.NotSelectedOnSlot();
+        }
+
+
+    }
+
+    private void OnHealingCardDrop(HealingCardHUD hUD)
+    {
+        CombatCardHUD overlapCard = OnDropCardOverCombatCard(hUD);
+        if (overlapCard != null)
+        {
+            overlapCard.HealCard(hUD.GetHealingValue());
+            Destroy(hUD.gameObject);
+        }
+        else
+        {
+            hUD.NotSelectedOnSlot();
         }
     }
 
@@ -219,9 +266,16 @@ public class CombatManager : MonoBehaviour
 
     private void PrepareEnemyAttack()
     {
-        BaseCardHUD enemyCardSelected = SelectStrategy();
-        BaseCardHUD cardToAttack = SelectCardToAttack();
-        StartCoroutine(MoveEnemyCard(enemyCardSelected, cardToAttack, _timeToStart));
+        if (_playerCardSlotManager.MainCardAlive())
+        {
+            BaseCardHUD enemyCardSelected = SelectStrategy();
+            BaseCardHUD cardToAttack = SelectCardToAttack();
+            StartCoroutine(MoveEnemyCard(enemyCardSelected, cardToAttack, _timeToStart));
+        }
+        else
+        {
+            GameManager.Instance.LoadScene(SCENES.GAME_OVER);
+        }
     }
 
     private BaseCardHUD SelectStrategy()
@@ -272,30 +326,32 @@ public class CombatManager : MonoBehaviour
     {
         _playerCardSlotManager.UnblockSelection();
         _enemyCardSlotManager.UnblockSelection();
-        if (!_playerCardSlotManager.HaveCards())
+        if (!_playerCardSlotManager.MainCardAlive())
         {
-            // TODO GameOver status
-            GameManager.Instance.LoadScene(SCENES.MAIN_MENU);
+            GameManager.Instance.LoadScene(SCENES.GAME_OVER);
         }
     }
 
     private void ApplicateDamage(BaseCardHUD attacker, BaseCardHUD defender, ATTACK_TYPE aTTACK_TYPE)
     {
-        int attackDamage = attacker.GetDamage();
-        int defPoints = defender.GetDefensePoints();
+        CombatCardHUD combatCardHUD = attacker.GetComponent<CombatCardHUD>();
+        CombatCardHUD defederHUD = defender.GetComponent<CombatCardHUD>();
+
+        int attackDamage = combatCardHUD.GetDamage();
+        int defPoints = defederHUD.GetDefensePoints();
         bool kill = false;
         if (attackDamage - defPoints > 0)
-            kill = defender.SubtractLife(attackDamage - defPoints);
+            kill = defederHUD.SubtractLife(attackDamage - defPoints);
 
         if (kill)
         {
             if (aTTACK_TYPE.Equals(ATTACK_TYPE.ALLY))
             {
-                _enemyCardSlotManager.KillCard(defender);
+                _enemyCardSlotManager.KillCard(defederHUD);
             }
             else
             {
-                _playerCardSlotManager.KillCard(defender);
+                _playerCardSlotManager.KillCard(defederHUD);
                 _deckManager.RemoveCard(defender);
             }
         }

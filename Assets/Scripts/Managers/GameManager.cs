@@ -10,8 +10,7 @@ public enum SCENES: int
     CREDITS     = 1,
     INIT_SCENE  = 2,
     GAME        = 3,
-    COMBAT      = 4,
-    REWARD      = 5,
+    GAME_OVER   = 4,
 }
 
 public enum GAME_STATE : int
@@ -69,13 +68,7 @@ public class GameManager : MonoBehaviour
 
     public void LoadScene(SCENES scene)
     {
-        if (scene.Equals(SCENES.MAIN_MENU))
-        {
-            Destroy(Player.Instance.gameObject);
-            Destroy(BoardManager.Instance.gameObject);
-        }
         GameManagerActions.OnSceneChange?.Invoke(scene);
-
         SceneManager.LoadScene((int)scene);
     }
 
@@ -92,5 +85,10 @@ public class GameManager : MonoBehaviour
     public GAME_STATE GetGAME_STATE()
     {
         return _gAME_sTATE;
+    }
+
+    public void LoadMainMenu()
+    {
+        LoadScene(SCENES.MAIN_MENU);
     }
 }

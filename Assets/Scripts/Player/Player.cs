@@ -20,12 +20,29 @@ public class Player : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+            GameManagerActions.OnGameStateChange(GAME_STATE.SELECTION_STATE);
             DontDestroyOnLoad(gameObject);
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    private void OnEnable()
+    {
+        GameManagerActions.OnSceneChange += OnSceneChange;
+    }
+
+    private void OnDisable()
+    {
+        GameManagerActions.OnSceneChange -= OnSceneChange;
+    }
+
+    private void OnSceneChange(SCENES sCENES)
+    {
+        if (sCENES.Equals(SCENES.MAIN_MENU) || sCENES.Equals(SCENES.MAIN_MENU))
+            Destroy(gameObject);
     }
 
     public void AddMainCard(BaseCardSO baseCardSO)

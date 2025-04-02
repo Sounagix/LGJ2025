@@ -49,7 +49,7 @@ public class BoardManager : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance == null)
+        if(Instance == null )
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
@@ -58,6 +58,22 @@ public class BoardManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+
+    private void OnEnable()
+    {
+        GameManagerActions.OnSceneChange += OnSceneChange;
+    }
+
+    private void OnDisable()
+    {
+        GameManagerActions.OnSceneChange -= OnSceneChange;
+    }
+
+    private void OnSceneChange(SCENES sCENES)
+    {
+        if (sCENES.Equals(SCENES.MAIN_MENU) || sCENES.Equals(SCENES.MAIN_MENU))
+            Destroy(gameObject);
     }
 
     private void Start()

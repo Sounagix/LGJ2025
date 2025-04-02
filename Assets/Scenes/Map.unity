@@ -1017,9 +1017,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _deckButton: {fileID: 1847031180}
-  _HudCardPrefab: {fileID: 4456910734757898141, guid: cb83644e305cb09419159e05c4d83713, type: 3}
+  _combatCardPrefab: {fileID: 4456910734757898141, guid: cb83644e305cb09419159e05c4d83713, type: 3}
+  _healingCardPrefab: {fileID: 4456910734757898141, guid: 0b813278c56731b42b578bbec6d74149, type: 3}
   _deckToHandTime: 1
   _handManager: {fileID: 309991023}
+  _testActive: 0
+  _testList:
+  - {fileID: 11400000, guid: d3d37c4adeb77cc4d8ec3553d270edf7, type: 2}
 --- !u!1001 &1010538603
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1210,6 +1214,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0658da9078c67439b8bdd1a402c67e8b, type: 2}
   - {fileID: 11400000, guid: 2ac4d3fa5fbff4e4b88b4299843a7d67, type: 2}
   - {fileID: 11400000, guid: c9fe7838f5ef041b09c92447769efbbf, type: 2}
+  - {fileID: 11400000, guid: e0af713c77783d04ca2f2a3b6af00b5c, type: 2}
   _silverRewards:
   - {fileID: 11400000, guid: 1a9939b18eabe0842bd9ed630f8d1995, type: 2}
   - {fileID: 11400000, guid: dfb273a4308434fa48b70fd02ae5288a, type: 2}
@@ -1217,6 +1222,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 7b7bada5583ae461daa4f478083c7bc8, type: 2}
   - {fileID: 11400000, guid: 31a10f41df0b04314b318e6bcd708037, type: 2}
   - {fileID: 11400000, guid: 6ddc5f1c044ab4859a53ddd707c7a9ab, type: 2}
+  - {fileID: 11400000, guid: 0e4fa4a1df3ddb249be8d069ad6b7230, type: 2}
   _goldRewards:
   - {fileID: 11400000, guid: c9d0c8dbef188bb46a612881a7c31a90, type: 2}
   - {fileID: 11400000, guid: 2483bc66aea1e4be59c3b774964c4922, type: 2}
@@ -1224,12 +1230,14 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9439571f35154447d864dd07d2c947bb, type: 2}
   - {fileID: 11400000, guid: 63dc468353e6b4de9927fec0470b8f93, type: 2}
   - {fileID: 11400000, guid: b24b5647c3cdb43b9a9bb28a92987cdb, type: 2}
+  - {fileID: 11400000, guid: d3d37c4adeb77cc4d8ec3553d270edf7, type: 2}
   _ironChance: 10
   _silverChance: 4
   _goldChance: 2
   _minRewardChance: 0
   _maxRewardChance: 10
-  _rewardHUDPrefab: {fileID: -4318753353064521666, guid: cb83644e305cb09419159e05c4d83713, type: 3}
+  _combatHUDPrefab: {fileID: 4456910734757898141, guid: cb83644e305cb09419159e05c4d83713, type: 3}
+  _healingHUDPrefab: {fileID: 4456910734757898141, guid: 0b813278c56731b42b578bbec6d74149, type: 3}
 --- !u!1 &1197682304
 GameObject:
   m_ObjectHideFlags: 0

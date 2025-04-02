@@ -92,7 +92,7 @@ public class MapCard : MonoBehaviour
         switch (rEWARD_TYPE)
         {
             case REWARD_TYPE.IRON:
-                index = UnityEngine.Random.Range(0, _ironCards.Count);
+                index = UnityEngine.Random.Range(1, _ironCards.Count);
                 currentCard = _ironCards[index];
                 break;
             case REWARD_TYPE.SILVER:

@@ -1,8 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,7 +9,7 @@ public class DeckManager : MonoBehaviour
     private Button _deckButton;
 
     [SerializeField]
-    private GameObject _HudCardPrefab;
+    private GameObject _combatCardPrefab, _healingCardPrefab;
 
     [SerializeField]
     private float _deckToHandTime;
@@ -21,6 +18,12 @@ public class DeckManager : MonoBehaviour
     private HandManager _handManager;
 
     List<BaseCardSO> _deck = new();
+
+    [SerializeField]
+    private bool _testActive;
+
+    [SerializeField]
+    private List<BaseCardSO> _testList = new();
 
     private void OnEnable()
     {
@@ -34,8 +37,8 @@ public class DeckManager : MonoBehaviour
 
     public void GenerateDeck()
     {
-        
-        foreach (BaseCardSO card in Player.Instance.GetDeck())
+        List<BaseCardSO> deck = _testActive ? _testList : Player.Instance.GetDeck();
+        foreach (BaseCardSO card in deck)
         {
             _deck.Add(Instantiate(card));
             
@@ -70,9 +73,25 @@ public class DeckManager : MonoBehaviour
     private BaseCardHUD CreateHUDCard()
     {
         int index = Random.Range(0, _deck.Count);
-
-        GameObject currentCard = Instantiate(_HudCardPrefab, transform);
-        BaseCardHUD hudCard = currentCard.GetComponent<BaseCardHUD>();
+        GameObject currentCard = null;
+        BaseCardHUD hudCard = null;
+        switch (_deck[index].cARD)
+        {
+            case CARD_HUD_TYPE.COMBAT:
+                {
+                    currentCard = Instantiate(_combatCardPrefab, transform);
+                    hudCard = currentCard.GetComponent<CombatCardHUD>();
+                }
+                break;
+            case CARD_HUD_TYPE.HEALING:
+                {
+                    currentCard = Instantiate(_healingCardPrefab, transform);
+                    hudCard = currentCard.GetComponent<HealingCardHUD>();
+                }
+                break;
+            case CARD_HUD_TYPE.NULL:
+                break;
+        }
         hudCard.Initialize(_deck[index]);
         currentCard.transform.position = transform.position;
         _deck.RemoveAt(index);

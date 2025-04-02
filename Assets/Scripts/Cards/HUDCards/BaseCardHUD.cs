@@ -5,44 +5,41 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+public enum CARD_HUD_TYPE : int
+{
+    COMBAT,
+    HEALING,
+    NULL,
+}
+
 public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler, 
     IPointerExitHandler, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField]
-    private TextMeshProUGUI _cardName, _cardDescription;
+    protected TextMeshProUGUI _cardName, _cardDescription;
 
     [SerializeField]
-    private TextMeshProUGUI _hpText, _blockText, _attackText;
+    protected RawImage _image;
 
-    [SerializeField]
-    private RawImage _image;
+    protected BaseCardSO _baseCardSO;
 
-    [SerializeField]
-    private Player _player;
+    protected Vector2 _initialAnchoredPosition;
 
-    private BaseCardSO _baseCardSO;
+    protected bool blocked = false;
 
-    private Vector2 _initialAnchoredPosition;
+    protected Image _cardImg;
 
-    private bool blocked = false;
+    protected bool _selected = false;
 
-    private Image _cardImg;
+    protected CardSlotsManager _cardSlotsManager;
 
-    private bool _selected = false;
+    protected bool _rdyForDestroy = false;
 
-    private int _attackDamage;
+    protected bool _cardOnGame = false;
 
-    private int _lifePoints;
+    protected CARD_HUD_TYPE cARD = CARD_HUD_TYPE.NULL;
 
-    private int _defensePoints;
-
-    private CardSlotsManager _cardSlotsManager;
-
-    private bool _rdyForDestroy = false;
-
-    private bool _cardOnGame = false;
-
-    public void Initialize(BaseCardSO card, CardSlotsManager cardSlotsManager = null)
+    public virtual void  Initialize(BaseCardSO card, CardSlotsManager cardSlotsManager = null)
     {
         _cardSlotsManager = cardSlotsManager;
         _cardName.text = card._cardName;
@@ -51,17 +48,6 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
         _baseCardSO = card;
         _initialAnchoredPosition = GetComponent<RectTransform>().anchoredPosition;
         _cardImg = GetComponent<Image>();
-
-        CombatCardSO combatCardSO = card as CombatCardSO;
-        if (combatCardSO)
-        {
-            _attackDamage = combatCardSO._damage;
-            _lifePoints = combatCardSO._life;
-            _defensePoints = combatCardSO._block;
-            _hpText.text = _lifePoints.ToString();
-            _blockText.text = _defensePoints.ToString();
-            _attackText.text = _attackDamage.ToString();
-        }
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -78,7 +64,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
             transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 
-    public void OnPointerClick(PointerEventData eventData)
+    public virtual void OnPointerClick(PointerEventData eventData)
     {
         if (blocked || _cardOnGame) return;
         switch (GameManager.Instance.GetGAME_STATE())
@@ -117,11 +103,8 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
             transform.position = Input.mousePosition;
     }
 
-    public void OnEndDrag(PointerEventData eventData)
+    public virtual void OnEndDrag(PointerEventData eventData)
     {
-        if (blocked) return;
-        if (GameManager.Instance.GetGAME_STATE().Equals(GAME_STATE.COMBAT_STATE))
-            CombatActions.OnDropDragedCard?.Invoke(this);
     }
 
     public void BlockCard()
@@ -176,30 +159,13 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
         transform.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 
-    public int GetDamage()
-    {
-        return _attackDamage;
-    }
-
-    public int GetLifePoints()
-    {
-        return _lifePoints;
-    }
-
-    public int GetDefensePoints()
-    {
-        return _defensePoints;
-    }
-
-    public bool SubtractLife(int value)
-    {
-        _lifePoints -= value;
-        _hpText.text = _lifePoints.ToString();
-        return _lifePoints <= 0;
-    }
-
     public void KillCard()
     {
         _rdyForDestroy = true;
+    }
+
+    public CARD_HUD_TYPE GetHUDCardType()
+    {
+        return cARD;
     }
 }

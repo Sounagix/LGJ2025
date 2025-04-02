@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c961c3680a8873241b2e7ec0b5e9b85b, type: 3}
+  m_Name: SilverHealingCard
+  m_EditorClassIdentifier: 
+  _cardName: Silver healing blessing
+  _cardDescription: 'A warm light envelops an allied unit, mending wounds and restoring
+    strength to fight on. Effect: Restore 5 health points to a friendly card on the
+    field.'
+  _cardImage: {fileID: 21300000, guid: 6e96120f16ae59b4bbb11fba68eb6f36, type: 3}
+  cARD: 1
+  _valueOfHealing: 12

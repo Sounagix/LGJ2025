@@ -22,6 +22,8 @@ public class CardSlotsManager : MonoBehaviour
 
     private List<BaseCardHUD> _cards = new List<BaseCardHUD>();
 
+    private CombatCardHUD _mainCard;
+
     private void Start()
     {
         CreateSlots();
@@ -68,9 +70,36 @@ public class CardSlotsManager : MonoBehaviour
         return _slotsStatus[index];
     }
 
+    public bool IsSlotFree(GameObject slot)
+    {
+        if (_slots.Contains(slot))
+        {
+            int index = _slots.IndexOf(slot);
+            return _slotsStatus[index];
+        }
+        else
+        {
+            return false;
+        }
+
+    }
+
     public List<RectTransform> GetSlots()
     {
         return _slotRectTransforms;
+    }
+
+    public List<RectTransform> GetCardsOnGame()
+    {
+        List<RectTransform> trs = new();
+        foreach (BaseCardHUD card in _cards)
+        {
+            if (card)
+            {
+                trs.Add(card.GetComponent<RectTransform>());
+            }
+        }
+        return trs;
     }
 
     public void SetSlotAsUsed(BaseCardHUD card, int index)
@@ -79,10 +108,21 @@ public class CardSlotsManager : MonoBehaviour
         _cards[index] = card;
     }
 
+    public void SetSlotAsUsed(BaseCardHUD card, GameObject slot)
+    {
+        if (_slots.Contains(slot))
+        {
+            int index = _slots.IndexOf(slot);
+            _slotsStatus[index] = false;
+            _cards[index] = card;
+        }
+
+    }
+
     public void CreateMainCard(BaseCardSO baseCardSO)
     {
         int index = (int)_slots.Count / 2;
-        CreateHudCard(baseCardSO, index);
+        _mainCard = CreateHudCard(baseCardSO, index) as CombatCardHUD;
     }
 
     public void CreateDeckCard(List<BaseCardSO> cards)
@@ -99,7 +139,7 @@ public class CardSlotsManager : MonoBehaviour
         }
     }
 
-    private void CreateHudCard(BaseCardSO card, int index)
+    private BaseCardHUD CreateHudCard(BaseCardSO card, int index)
     {
         GameObject hudCard = Instantiate(_hudCardPrefab, _slots[index].transform);
         BaseCardHUD hud = hudCard.GetComponent<BaseCardHUD>();
@@ -110,6 +150,7 @@ public class CardSlotsManager : MonoBehaviour
         hudCard.tag = _cardTag;
         _slotsStatus[index] = false;
         _cards[index] = hud;
+        return hud;
     }
 
     public BaseCardHUD GetRandomCard()
@@ -130,7 +171,7 @@ public class CardSlotsManager : MonoBehaviour
         return cardsAvarible[index];
     }
 
-    public void KillCard(BaseCardHUD defender)
+    public void KillCard(CombatCardHUD defender)
     {
         if (_cards.Contains(defender))
         {
@@ -150,6 +191,11 @@ public class CardSlotsManager : MonoBehaviour
     public bool HaveCards()
     {
         return _cards.FindAll(c => c != null).Count > 0;
+    }
+
+    public bool MainCardAlive()
+    {
+        return _mainCard && _mainCard.GetLifePoints() > 0;
     }
 
     public void Clean()

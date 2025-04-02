@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "NewCard", menuName = "Cards/BaseCard")]
 public class BaseCardSO : ScriptableObject
 {
     [SerializeField]
@@ -15,4 +14,7 @@ public class BaseCardSO : ScriptableObject
 
     [SerializeField]
     public Sprite _cardImage;
+
+    [SerializeField]
+    public CARD_HUD_TYPE cARD;
 }

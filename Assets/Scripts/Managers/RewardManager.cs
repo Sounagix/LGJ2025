@@ -35,7 +35,10 @@ public class RewardManager : MonoBehaviour
     private float _minRewardChance, _maxRewardChance;
 
     [SerializeField]
-    private BaseCardHUD _rewardHUDPrefab;
+    private GameObject _combatHUDPrefab;
+
+    [SerializeField]
+    private GameObject _healingHUDPrefab;
 
     private BaseCardSO _rewardCard;
 
@@ -75,7 +78,19 @@ public class RewardManager : MonoBehaviour
 
     private void ShowReward()
     {
-        _currentRewardHUD = Instantiate(_rewardHUDPrefab, transform);
+        GameObject prefab = null;
+        switch (_rewardCard.cARD)
+        {
+            case CARD_HUD_TYPE.COMBAT:
+                prefab = _combatHUDPrefab;
+                break;
+            case CARD_HUD_TYPE.HEALING:
+                prefab = _healingHUDPrefab;
+                break;
+            case CARD_HUD_TYPE.NULL:
+                break;
+        }
+        _currentRewardHUD = Instantiate(prefab, transform).GetComponent<BaseCardHUD>();
         _currentRewardHUD.transform.localPosition = Vector3.zero;
         _currentRewardHUD.Initialize(_rewardCard);
     }
