@@ -16,6 +16,7 @@ MonoBehaviour:
   _cardDescription: Vicente Guerrero, Mexican Officer during the Mexican Indepedence
     War
   _cardImage: {fileID: 21300000, guid: 1161041ebfc8a410588a76e8ce4caeba, type: 3}
-  _damage: 5
+  cARD: 0
+  _damage: 8
   _block: 2
   _life: 25

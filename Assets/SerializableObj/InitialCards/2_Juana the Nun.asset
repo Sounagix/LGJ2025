@@ -15,6 +15,7 @@ MonoBehaviour:
   _cardName: Juana the Nun
   _cardDescription: A hispanic Nun, inspired by Sor Juana Ines de la Cruz
   _cardImage: {fileID: 21300000, guid: 91e4072b3c9f440ba9d0447db5f877a2, type: 3}
-  _damage: 3
+  cARD: 0
+  _damage: 6
   _block: 4
   _life: 25

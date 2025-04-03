@@ -15,6 +15,7 @@ MonoBehaviour:
   _cardName: Jarjacha
   _cardDescription: Cursed demonic Llama monster with the head of a human.
   _cardImage: {fileID: 21300000, guid: f13479c5f31de464a95306d4f817ce13, type: 3}
+  cARD: 0
   _damage: 6
-  _block: 5
+  _block: 3
   _life: 22

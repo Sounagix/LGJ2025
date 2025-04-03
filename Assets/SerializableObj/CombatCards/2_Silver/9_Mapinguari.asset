@@ -16,6 +16,7 @@ MonoBehaviour:
   _cardDescription: Cryptid creature from Brazil, with an elongated snout of a pig/dog,
     or a giant anteater,
   _cardImage: {fileID: 21300000, guid: fec891afeee9a4c9ebb6a65c527d7b74, type: 3}
+  cARD: 0
   _damage: 7
-  _block: 0
+  _block: 1
   _life: 25
