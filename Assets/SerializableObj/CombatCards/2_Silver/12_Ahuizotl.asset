@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardName: Ahuizotl
   _cardDescription: A water dog creature with a prehensile tail shaped like a hand.
-  _cardImage: {fileID: 21300000, guid: 6e10d48e7a8c3425c9595538b5fbf06d, type: 3}
+  _cardImage: {fileID: 21300000, guid: dc2b16b0f68a74ae0bfdf31d9d5318a9, type: 3}
+  cARD: 0
   _damage: 8
   _block: 2
   _life: 30

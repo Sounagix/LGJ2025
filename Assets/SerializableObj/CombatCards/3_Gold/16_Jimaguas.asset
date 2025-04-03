@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardName: Jimaguas
   _cardDescription: Ghostly Twins Dolls with PSI powers from Cuba.
-  _cardImage: {fileID: 21300000, guid: 5c436f9af122d44219237eb06cb8eeed, type: 3}
+  _cardImage: {fileID: 21300000, guid: d4088a4d5c0ee41109cb2f2c7d0a3387, type: 3}
+  cARD: 0
   _damage: 13
   _block: 0
   _life: 30

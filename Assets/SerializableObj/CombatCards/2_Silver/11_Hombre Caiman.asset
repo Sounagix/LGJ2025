@@ -15,7 +15,8 @@ MonoBehaviour:
   _cardName: Hombre Caiman
   _cardDescription: A cursed man turned into an alligator due to spying into bathing
     women
-  _cardImage: {fileID: 21300000, guid: 914bde79713c74d8190e93add616ce28, type: 3}
+  _cardImage: {fileID: 21300000, guid: 7f7ff3ea4d5544a219036f435a99ccc3, type: 3}
+  cARD: 0
   _damage: 10
   _block: 1
   _life: 20

@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardName: La Llorona
   _cardDescription: A vengenful ghost mourning her children.
-  _cardImage: {fileID: 21300000, guid: 08c5f9c8b16a24735adc9f39f1e9a66f, type: 3}
+  _cardImage: {fileID: 21300000, guid: bb5c9aea00021428294f8a348c74aa2d, type: 3}
+  cARD: 0
   _damage: 12
   _block: 3
   _life: 45

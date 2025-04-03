@@ -15,7 +15,8 @@ MonoBehaviour:
   _cardName: Zapam Zucum
   _cardDescription: ' A voluptuous, dark-skinned, and white-handed goddess from Argentina,
     Chile and Bolivia'
-  _cardImage: {fileID: 21300000, guid: fec891afeee9a4c9ebb6a65c527d7b74, type: 3}
+  _cardImage: {fileID: 21300000, guid: bdcf26192b1e24b27b756a766859b5bc, type: 3}
+  cARD: 0
   _damage: 4
   _block: 3
   _life: 33

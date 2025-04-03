@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardName: Chupacabras
   _cardDescription: A Cryptid from Puerto Rico who attacks goats at night
-  _cardImage: {fileID: 21300000, guid: 95188bbe601ea43939f8bad4158e32ca, type: 3}
+  _cardImage: {fileID: 21300000, guid: 4fcd4ef471ffa4885a126fa6d38d4b41, type: 3}
+  cARD: 0
   _damage: 15
   _block: 1
   _life: 40

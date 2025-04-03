@@ -13,9 +13,8 @@ MonoBehaviour:
   m_Name: 20_Santa Muerte
   m_EditorClassIdentifier: 
   _cardName: Santa Muerte
-  _cardDescription: The Personification of Death capable of reanimated previous defeated
-    foes.
-  _cardImage: {fileID: 21300000, guid: 925ff9accdf95410fb891d72c805d506, type: 3}
+  _cardDescription: The Personification of Death recognizes your mettle.
+  _cardImage: {fileID: 21300000, guid: 77b15a664260a46ccbd7737ab663ddbf, type: 3}
   cARD: 0
   _damage: 25
   _block: 5

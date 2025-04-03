@@ -13,9 +13,9 @@ MonoBehaviour:
   m_Name: 8_Chamuco
   m_EditorClassIdentifier: 
   _cardName: Chamuco
-  _cardDescription: Cryptid creature from Brazil, with an elongated snout of a pig/dog,
-    or a giant anteater.
+  _cardDescription: Hispanic Interpretation of a small devil creature
   _cardImage: {fileID: 21300000, guid: 01efd85abdbe74fa0b5df52e885a4ab0, type: 3}
+  cARD: 0
   _damage: 4
   _block: 1
   _life: 5

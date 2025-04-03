@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardName: Padre sin Cabeza
   _cardDescription: A ghostly headless Priest from El Salvador.
-  _cardImage: {fileID: 21300000, guid: 786c284fb771a4271bd59cca912b5cd1, type: 3}
+  _cardImage: {fileID: 21300000, guid: 7ed91c2ef9769422691273d22899c1a6, type: 3}
   cARD: 0
   _damage: 5
   _block: 4
