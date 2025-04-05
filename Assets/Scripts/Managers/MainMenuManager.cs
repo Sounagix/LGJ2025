@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class MainMenuManager : MonoBehaviour
 {
     [SerializeField]
-    private Button _playButton, _creditButton, _quitButton;
+    private Button _playButton, _fullScreenButton, _quitButton;
 
     private void Awake()
     {
@@ -14,10 +14,10 @@ public class MainMenuManager : MonoBehaviour
             {
                 SceneManager.LoadScene((int)SCENES.INIT_SCENE);
             });
-        _creditButton.onClick.AddListener(
+        _fullScreenButton.onClick.AddListener(
             delegate ()
             {
-                SceneManager.LoadScene((int)SCENES.CREDITS);
+                Screen.fullScreen = !Screen.fullScreen;
             });
         _quitButton.onClick.AddListener(
             delegate ()
