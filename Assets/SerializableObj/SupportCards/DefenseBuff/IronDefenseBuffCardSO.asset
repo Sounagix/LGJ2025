@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bb9d405f1e542748964f3db38bb3d26, type: 3}
   m_Name: IronDefenseBuffCardSO
   m_EditorClassIdentifier: 
-  _cardName: Iron Ironguard Blessing
-  _cardDescription: A shimmering shield of energy forms around the target, deflecting
-    incoming blows with ease.
+  _cardName: Coatlicue Guard
+  _cardDescription: Increase BLK by 2 on this battle
   _cardImage: {fileID: 21300000, guid: 13be6a612bef244469678a00e059f363, type: 3}
   cARD: 4
-  _defenseBuffValue: 5
+  rEWARD_tYPE: 0
+  _defenseBuffValue: 2

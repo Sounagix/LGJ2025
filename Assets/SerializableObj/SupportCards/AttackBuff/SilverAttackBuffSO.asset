@@ -12,9 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a9e7ed28b8a63f41a8fac244a0a40d7, type: 3}
   m_Name: SilverAttackBuffSO
   m_EditorClassIdentifier: 
-  _cardName: Silver Blade Surge
-  _cardDescription: A fiery aura ignites around the weapon, channeling raw power
-    into every strike.
+  _cardName: Mixcoatl Wrath
+  _cardDescription: Increase DMG by 7 on this battle
   _cardImage: {fileID: 21300000, guid: d88d753b8a13233439e0612cf70f5237, type: 3}
   cARD: 3
   rEWARD_tYPE: 1

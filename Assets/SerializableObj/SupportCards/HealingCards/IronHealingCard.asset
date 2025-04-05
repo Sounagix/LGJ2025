@@ -12,10 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c961c3680a8873241b2e7ec0b5e9b85b, type: 3}
   m_Name: IronHealingCard
   m_EditorClassIdentifier: 
-  _cardName: Iron healing blessing
-  _cardDescription: 'A warm light envelops an allied unit, mending wounds and restoring
-    strength to fight on. Effect: Restore 5 health points to a friendly card on the
-    field.'
+  _cardName: Sedna Bounty
+  _cardDescription: Heals 10 HP
   _cardImage: {fileID: 21300000, guid: 6e96120f16ae59b4bbb11fba68eb6f36, type: 3}
   cARD: 2
-  _valueOfHealing: 5
+  rEWARD_tYPE: 0
+  _valueOfHealing: 10
