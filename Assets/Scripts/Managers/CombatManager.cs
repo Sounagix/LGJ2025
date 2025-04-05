@@ -22,6 +22,15 @@ public enum ATTACK_TYPE : int
 }
 
 
+public enum ATTACK_STATEGY : int
+{
+    RANDOM,
+    MAIN_CHARACTER,
+    MOST_STRONGER,
+    MOST_WEAK,
+    SIZE
+}
+
 public class CombatManager : MonoBehaviour
 {
     [SerializeField]
@@ -70,6 +79,8 @@ public class CombatManager : MonoBehaviour
     [SerializeField]
     private AudioClip _selectionClip;
 
+    private ATTACK_STATEGY aTTACK_sTATEGY;
+
     private void OnEnable()
     {
         CombatActions.OnCardOGSelected += OnCardOGSelected;
@@ -114,6 +125,8 @@ public class CombatManager : MonoBehaviour
     private void CreateEnemies()
     {
         _enemyCardSlotManager.CreateDeckCard(_mapCard.GetCards(), _mapCard.GetCardReward());
+        aTTACK_sTATEGY = (ATTACK_STATEGY)UnityEngine.Random.Range(0, (int)ATTACK_STATEGY.SIZE);
+        print("STRATEGY " + aTTACK_sTATEGY);
     }
 
     private CombatCardHUD OnDropCardOverCombatCard(BaseCardHUD droppedHUD)
@@ -308,9 +321,28 @@ public class CombatManager : MonoBehaviour
     {
         if (_playerCardSlotManager.MainCardAlive())
         {
-            BaseCardHUD enemyCardSelected = SelectStrategy();
-            BaseCardHUD cardToAttack = SelectCardToAttack();
-            StartCoroutine(MoveEnemyCard(enemyCardSelected, cardToAttack, _timeToStart));
+            BaseCardHUD attacker = null;
+            BaseCardHUD defender = null;
+            switch (aTTACK_sTATEGY)
+            {
+                case ATTACK_STATEGY.RANDOM:
+                    attacker = _enemyCardSlotManager.GetRandomCard();
+                    defender = _playerCardSlotManager.GetRandomCard();
+                    break;
+                case ATTACK_STATEGY.MAIN_CHARACTER:
+                    attacker = _enemyCardSlotManager.GetStrongerCard();
+                    defender = _playerCardSlotManager.GetMainCard();
+                    break;
+                case ATTACK_STATEGY.MOST_STRONGER:
+                    attacker = _enemyCardSlotManager.GetStrongerCard();
+                    defender = _playerCardSlotManager.GetWeakerHP();
+                    break;
+                case ATTACK_STATEGY.MOST_WEAK:
+                    attacker = _enemyCardSlotManager.GetStrongerCard();
+                    defender = _playerCardSlotManager.GetWeakerDefense();
+                    break;
+             }
+            StartCoroutine(MoveEnemyCard(attacker, defender, _timeToStart));
         }
         else
         {

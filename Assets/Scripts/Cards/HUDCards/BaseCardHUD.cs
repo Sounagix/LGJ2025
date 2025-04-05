@@ -45,6 +45,9 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
 
     protected CARD_HUD_TYPE cARD = CARD_HUD_TYPE.NULL;
 
+    [SerializeField]
+    protected Image _eyePlaceholder;
+
 
     public virtual void  Initialize(BaseCardSO card, CardSlotsManager cardSlotsManager = null)
     {
@@ -89,6 +92,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
                 break;
             case GAME_STATE.COMBAT_STATE:
                 if (blocked || !_cardOnGame) return;
+                _eyePlaceholder.gameObject.SetActive(true);
                 _selected = true;
                 _cardImg.color = Color.gray;
                 CombatActions.OnCardOGSelected?.Invoke(this);
@@ -168,6 +172,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
         _selected = false;
         if (gameObject.activeInHierarchy)
         {
+            _eyePlaceholder.gameObject.SetActive(false);
             _cardImg.color = Color.white;
             transform.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
         }
@@ -185,6 +190,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
         _cardOnGame = true;
         if (gameObject.activeInHierarchy)
         {
+            _eyePlaceholder.gameObject.SetActive(true);
             _cardImg.color = Color.gray;
             transform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
         }
@@ -206,13 +212,13 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
         switch (_baseCardSO.rEWARD_tYPE)
         {
             case REWARD_TYPE.IRON:
-                _edgeImg.color = new Color(255, 215, 0);
+                _edgeImg.color = new Color(70, 70, 70);
                 break;
             case REWARD_TYPE.SILVER:
                 _edgeImg.color = new Color(192, 192, 192);
                 break;
             case REWARD_TYPE.GOLD:
-                _edgeImg.color = new Color(70, 70, 70);
+                _edgeImg.color = new Color(255, 215, 0);
                 break;
             case REWARD_TYPE.SIZE:
                 break;

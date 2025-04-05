@@ -226,4 +226,60 @@ public class CardSlotsManager : MonoBehaviour
     {
         return cARD;
     }
+
+    public BaseCardHUD GetMainCard()
+    {
+        return _mainCard;
+    }
+
+    public BaseCardHUD GetStrongerCard()
+    {
+        int currentAttack = 0;
+        int index = 0;
+        foreach (BaseCardHUD c in _cards)
+        {
+            if (c == null) continue;
+            int cAttack = (c as CombatCardHUD).GetDamage();
+            if (currentAttack < cAttack)
+            {
+                currentAttack = cAttack;
+                index = _cards.IndexOf(c);
+            }
+        }
+        return _cards[index];
+    }
+
+    public BaseCardHUD GetWeakerDefense()
+    {
+        int currentDef = 0;
+        int index = 0;
+        foreach (BaseCardHUD c in _cards)
+        {
+            if (c == null) continue;
+            int cDefense = (c as CombatCardHUD).GetDefensePoints();
+            if (currentDef < cDefense)
+            {
+                currentDef = cDefense;
+                index = _cards.IndexOf(c);
+            }
+        }
+        return _cards[index];
+    }
+
+    public BaseCardHUD GetWeakerHP()
+    {
+        int currentHp = 0;
+        int index = 0;
+        foreach (BaseCardHUD c in _cards)
+        {
+            if (c == null) continue;
+            int cHP = (c as CombatCardHUD).GetLifePoints();
+            if (currentHp < cHP)
+            {
+                currentHp = cHP;
+                index = _cards.IndexOf(c);
+            }
+        }
+        return _cards[index];
+    }
 }

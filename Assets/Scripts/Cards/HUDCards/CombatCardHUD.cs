@@ -17,6 +17,16 @@ public class CombatCardHUD : BaseCardHUD
     [SerializeField]
     protected TextMeshProUGUI _hpText, _blockText, _attackText;
 
+    [SerializeField]
+    private UnityEngine.UI.Image _hpImg, _attackImg, _defImg;
+
+    [SerializeField]
+    private float _timePulse;
+
+    [SerializeField]
+    [Min(1.1f)]
+    private float _scaleFactor;
+
     private UnityEngine.UI.Image _mainImage;
 
     public override void Initialize(BaseCardSO card, CardSlotsManager cardSlotsManager = null)
@@ -55,6 +65,11 @@ public class CombatCardHUD : BaseCardHUD
     {
         _lifePoints -= value;
         _hpText.text = _lifePoints.ToString();
+        if (_lifePoints > 0)
+        {
+            Vector2 originalScale = _hpImg.rectTransform.localScale;
+            StartCoroutine(PinPongImg(_hpImg, originalScale));
+        }
         return _lifePoints <= 0;
     }
 
@@ -107,16 +122,13 @@ public class CombatCardHUD : BaseCardHUD
         if (GameManager.Instance.GetGAME_STATE().Equals(GAME_STATE.COMBAT_STATE))
             CombatActions.OnCombatCardDroped?.Invoke(this);
     }
-
-    
-
-
     public void HealCard(int v)
     {
         //_mainImage.material.SetFloat("_glowIntensity", 0.5f);
         _lifePoints += v;
         _hpText.text = _lifePoints.ToString();
-        //Invoke(nameof(BackToNormalGlow), 1.5f);
+        Vector2 originalScale = _defImg.rectTransform.localScale;
+        StartCoroutine(PinPongImg(_hpImg, originalScale));
     }
 
     public void BuffAttack(int value)
@@ -124,7 +136,8 @@ public class CombatCardHUD : BaseCardHUD
         //_mainImage.material.SetFloat("_glowIntensity", 0.5f);
         _attackDamage += value;
         _attackText.text = _attackDamage.ToString();
-        //Invoke(nameof(BackToNormalGlow), 1.5f);
+        Vector2 originalScale = _defImg.rectTransform.localScale;
+        StartCoroutine(PinPongImg(_attackImg, originalScale));
     }
 
     public void BuffDefense(int value)
@@ -133,10 +146,32 @@ public class CombatCardHUD : BaseCardHUD
         _defensePoints += value;
         _blockText.text = _defensePoints.ToString();
         //Invoke(nameof(BackToNormalGlow), 1.5f);
+        Vector2 originalScale = _defImg.rectTransform.localScale;
+        StartCoroutine(PinPongImg(_defImg, originalScale));
     }
 
     public bool IsAlive()
     {
         return _lifePoints > 0;
     }
+
+    private IEnumerator PinPongImg(Image image, Vector2 originalScale)
+    {
+        float timer = 0f;
+
+        while (timer < _timePulse)
+        {
+            timer += Time.deltaTime;
+            float normalizedTime = timer / _timePulse;
+
+            float scaleFactor = Mathf.Lerp(1f, _scaleFactor, Mathf.Sin(normalizedTime * Mathf.PI));
+
+            image.rectTransform.localScale = originalScale * scaleFactor;
+
+            yield return null;
+        }
+
+        image.rectTransform.localScale = originalScale;
+    }
+
 }

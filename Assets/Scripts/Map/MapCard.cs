@@ -18,7 +18,7 @@ public class MapCard : MonoBehaviour
 {
     private BoardManager _boardManager;
 
-    private SpriteRenderer _spriteRenderer;
+    private SpriteRenderer _edgeImg;
 
     private Vector2Int _index;
 
@@ -55,11 +55,14 @@ public class MapCard : MonoBehaviour
     [SerializeField]
     private int _numOfCardForFirstLap, _numOfCardForSecondLap, _numOfCardForThirdLap, _numOfCardsToFinishGame;
 
+    [SerializeField]
+    private Color _colorToBlock;
+
     private bool _touched = false;
 
     private void Awake()
     {
-        _spriteRenderer = GetComponent<SpriteRenderer>();
+        _edgeImg = GetComponent<SpriteRenderer>();
     }
 
     private void Start()
@@ -89,7 +92,7 @@ public class MapCard : MonoBehaviour
         _numOfCards = UnityEngine.Random.Range(1, _numOfCards);
         if (numOfMapCardsTouched >= _numOfCardsToFinishGame)
         {
-            // 5 acompañando al boss
+            // 4 acompañando al boss
             _numOfCards = 4;
             _cARDVALUE = REWARD_TYPE.GOLD;
             for (int i = 0; i < _numOfCards; i++)
@@ -184,17 +187,17 @@ public class MapCard : MonoBehaviour
 
     public void OnCardSelected()
     {
-        _spriteRenderer.color = Color.gray;
+        _edgeImg.color = Color.red;
     }
 
     public void OnCardUnSelected()
     {
-        _spriteRenderer.color = Color.white;
+        _edgeImg.color = Color.white;
     }
 
     public void ChangeToBlock()
     {
-        _cardImage.color = new Color(100, 85, 85, 223);
+        _cardImage.color = _colorToBlock;
         _cardType = CARD_TYPE.BLOCK;
         _touched = true;
     }
