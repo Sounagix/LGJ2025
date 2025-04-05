@@ -1,17 +1,15 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public enum SCENES: int
+public enum SCENES : int
 {
-    MAIN_MENU   = 0,
-    CREDITS     = 1,
-    INIT_SCENE  = 2,
-    GAME        = 3,
-    GAME_OVER   = 4,
-    WIN_SCENE   = 5,
+    MAIN_MENU = 0,
+    CREDITS = 1,
+    INIT_SCENE = 2,
+    GAME = 3,
+    GAME_OVER = 4,
+    WIN_SCENE = 5,
 }
 
 public enum GAME_STATE : int
@@ -23,7 +21,7 @@ public enum GAME_STATE : int
     NULL
 }
 
-public static class  GameManagerActions
+public static class GameManagerActions
 {
     public static Action<SCENES> OnSceneChange;
 

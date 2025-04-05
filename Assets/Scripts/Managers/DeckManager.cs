@@ -39,7 +39,7 @@ public class DeckManager : MonoBehaviour
 
     private void OnDisable()
     {
-        
+
     }
 
     public void GenerateDeck()

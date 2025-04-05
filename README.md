@@ -1,48 +1,105 @@
-Always use Unity’s official .gitignore
-Avoid committing unnecessary folders like Library/, Temp/, .vs/, or Builds/.
+# 🎮 Game Design Document – *Heart of Cards*
 
-Don’t commit large files or builds
-Git should only track scripts, scenes, prefabs, assets, and configurations.
-Use external services (Drive, Itch.io, etc.) to share builds.
+**Game Jam:** LAGS Game Jam 2025  
+**Platform:** WebGL (Unity)  
+**Genre:** Card Game / Strategy / Exploration  
+**Average playtime:** 5–10 minutes  
+**Game mode:** Single player  
+**Controls:** Mouse  
 
-BRANCHING
-Never work directly on main
-Always create branches like feature/inventory, fix/collision-bug, ui/main-menu.
+---
 
-Use clear, descriptive branch names
-Example: feature/powerups, hotfix/fuel-bar.
+## 🧩 General Concept
 
-Always pull before you push
-To stay synced and avoid merge conflicts.
+**Heart of Cards** is a strategy game where the player explores a map made entirely of cards.  
+Each move is a tactical decision between empty paths, combat, or rewards.
 
-COMMITS
-Commit often and in small, meaningful chunks
-Don’t wait until 20 changes are done. Small commits are easier to track.
+The goal is to reach the final boss card and defeat it, using a deck built from previously collected cards.  
+Once a card is used in combat, it is removed from the deck for the rest of the run, forcing the player to manage their resources strategically.
 
-Write descriptive commit messages
-❌ updated stuff
-✅ Add projectile system and damage logic to enemies
+---
 
+## 🗺️ Core Mechanics
 
-SCENES & PREFABS
-Warn teammates before editing scenes
-Unity scenes can easily create merge conflicts. Communication helps.
+### 🔹 Exploration
+- The map is generated from cards that act as nodes.
+- The player clicks to move between adjacent cards.
+- Node types:
+  - 🟦 Empty: nothing happens.
+  - 🟨 Reward: grants a new card to the deck.
+  - 🔺 Combat: triggers a battle.
 
-Use prefab nesting and modularity
-Split the scene into reusable prefabs (UI, HUD, enemies) so multiple people can work safely.
+### 🔹 Combat System
+- The player uses the available deck upon entering combat.
+- Cards are removed from the deck **until the end of the run** once played.
+- Cards can deal damage, block, heal, provide attack buffs, or defense buffs.
 
-PULL REQUESTS (if using GitHub/GitLab)
-Don’t push directly to main
-Open pull requests for every new feature or fix.
+### 🔹 Victory Condition
+- Reach the final boss card.
+- Defeat it to complete the run.
 
-Review your code before merging
-Make sure it’s tested and doesn’t include unwanted files.
+---
 
-Run git status before every commit
-Know exactly what you’re about to push.
+## 📋 Content and Design
 
-Commit .meta files too
-Unity uses them for asset references—don’t skip them.
+### 🃏 Cards
+- Obtained by stepping on reward cards, which offer three options — the player must choose one.
+- Cards can perform actions such as:
+  - Basic attack
+  - Defense
+  - Healing
+  - Buffs
 
-Never commit local IDE folders or user settings
-Ignore folders like .idea, .vs, Builds, UserSettings, and anything system-specific.
+### 💀 Enemies
+- Enemies feature simple or unique attack patterns.
+- The final boss has greater difficulty.
+
+---
+
+## 🎨 Visual Style
+- 2D pixel art graphics.
+- Clean and minimalist aesthetic.
+- Stylized cards with a clear, readable UI.
+
+---
+
+## 🔊 Sound and Music
+
+*(To be defined)*
+
+---
+
+## 🖱️ Controls
+
+- **Mouse only**
+  - Click to move across the card map.
+  - Drag & drop or click to play cards during combat.
+
+---
+
+## ⚙️ Technology
+
+- **Engine:** Unity
+- **Version:** 2022 or later
+- **Target platform:** WebGL
+- **Distribution:** Itch.io
+
+---
+
+## 🙌 Credits
+
+| Name       | Role                            |
+|------------|---------------------------------|
+| sounagix   | Game Design, Programming        |
+| Reckoner   | Art, Game Design, Management    |
+
+---
+
+## 📌 Additional Notes
+
+- Fast-paced gameplay: 5–10 minutes per run.
+- Easy to learn, hard to master.
+- Inspired by games like *Slay the Spire*, *Dicey Dungeons*, and roguelike systems.
+- Features an original mechanic: exploring a map made entirely of cards.
+
+---

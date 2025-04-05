@@ -1,9 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.UI;
 
 
 public static class CombatActions
@@ -13,7 +11,7 @@ public static class CombatActions
     public static Action<SupportCardHUD> OnDropSupportCard;
 
     public static Action<CombatCardHUD> OnCombatCardDroped;
-} 
+}
 
 public enum ATTACK_TYPE : int
 {
@@ -189,7 +187,7 @@ public class CombatManager : MonoBehaviour
         CombatCardHUD overlapCard = OnDropCardOverCombatCard(hUD);
         if (overlapCard != null)
         {
-            if (hUD.GetHUDCardType().Equals(CARD_HUD_TYPE.HEALING)) 
+            if (hUD.GetHUDCardType().Equals(CARD_HUD_TYPE.HEALING))
             {
                 overlapCard.HealCard((hUD as HealingCardHUD).GetHealingValue());
             }
@@ -259,19 +257,19 @@ public class CombatManager : MonoBehaviour
         return !card.CompareTag("EnemyCard");
     }
 
-    
+
     private void AttackEnemyCard()
     {
         _playerCardSlotManager.BlockSelection();
         _enemyCardSlotManager.BlockSelection();
         StartCoroutine(MoveCard(_currentCardSelected, _currentTargetSelected, _timeToAttack));
     }
-    
+
     private void OnBackFromAttack()
     {
-        if(_currentCardSelected)
+        if (_currentCardSelected)
             _currentCardSelected.UnSelecCard();
-        if(_currentTargetSelected)
+        if (_currentTargetSelected)
             _currentTargetSelected.UnSelecCard();
         _currentCardSelected = null;
         _currentTargetSelected = null;
@@ -285,12 +283,12 @@ public class CombatManager : MonoBehaviour
         }
     }
 
-    private IEnumerator MoveCard(BaseCardHUD attacker,BaseCardHUD defender , float duration)
+    private IEnumerator MoveCard(BaseCardHUD attacker, BaseCardHUD defender, float duration)
     {
         Vector2 startPos = attacker.transform.position;
         Vector2 target = defender.transform.position;
         float elapsed = 0f;
-    
+
         while (elapsed < duration)
         {
             elapsed += Time.deltaTime;
@@ -298,7 +296,7 @@ public class CombatManager : MonoBehaviour
             attacker.transform.position = Vector2.Lerp(startPos, target, t);
             yield return null;
         }
-    
+
         attacker.transform.position = target; // asegúrate de terminar exactamente en el destino
 
         ApplicateDamage(attacker, defender, ATTACK_TYPE.ALLY);
@@ -341,7 +339,7 @@ public class CombatManager : MonoBehaviour
                     attacker = _enemyCardSlotManager.GetStrongerCard();
                     defender = _playerCardSlotManager.GetWeakerDefense();
                     break;
-             }
+            }
             StartCoroutine(MoveEnemyCard(attacker, defender, _timeToStart));
         }
         else

@@ -1,9 +1,6 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class BoardManager : MonoBehaviour
 {
@@ -22,7 +19,7 @@ public class BoardManager : MonoBehaviour
     [SerializeField]
     private float _spacingY;
 
-    [SerializeField] 
+    [SerializeField]
     private float _displacementDuration;
 
     [SerializeField]
@@ -37,7 +34,7 @@ public class BoardManager : MonoBehaviour
     private Coroutine _playerMovement;
 
     public static BoardManager Instance;
-    
+
     [SerializeField]
     private GameObject _rewardPanel;
 
@@ -51,7 +48,7 @@ public class BoardManager : MonoBehaviour
 
     private void Awake()
     {
-        if(Instance == null )
+        if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
@@ -154,7 +151,7 @@ public class BoardManager : MonoBehaviour
             _playerMovement = StartCoroutine(MovePlayer(mapCard.transform.position, _displacementDuration));
             _playerCard = mapCard;
             _playerCard.OnCardSelected();
-        }   
+        }
     }
 
     private bool IsAdjacent(Vector2Int a, Vector2Int b)

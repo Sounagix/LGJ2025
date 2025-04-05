@@ -1,10 +1,5 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.Serialization;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 public enum CARD_TYPE
 {
@@ -166,7 +161,7 @@ public class MapCard : MonoBehaviour
 
     private void OnMouseDown()
     {
-        if(GameManager.Instance.GetGAME_STATE().Equals(GAME_STATE.MAP_STATE))
+        if (GameManager.Instance.GetGAME_STATE().Equals(GAME_STATE.MAP_STATE))
             _boardManager.OnCardTouched(this);
     }
 

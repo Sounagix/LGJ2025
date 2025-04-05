@@ -1,6 +1,4 @@
-using System;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
@@ -15,7 +13,7 @@ public enum CARD_HUD_TYPE : int
     NULL,
 }
 
-public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler, 
+public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
     IPointerExitHandler, IPointerClickHandler, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [SerializeField]
@@ -49,7 +47,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
     protected Image _eyePlaceholder;
 
 
-    public virtual void  Initialize(BaseCardSO card, CardSlotsManager cardSlotsManager = null)
+    public virtual void Initialize(BaseCardSO card, CardSlotsManager cardSlotsManager = null)
     {
         _cardSlotsManager = cardSlotsManager;
         _cardName.text = card._cardName;
@@ -86,7 +84,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
         {
             case GAME_STATE.SELECTION_STATE:
                 Player.Instance.AddMainCard(_baseCardSO);
-                GameManager.Instance.LoadScene(SCENES.GAME);  
+                GameManager.Instance.LoadScene(SCENES.GAME);
                 break;
             case GAME_STATE.MAP_STATE:
                 break;
@@ -202,7 +200,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
         return cARD;
     }
 
-    public void LevelUp(int hpValue,int atkValue, int defValue)
+    public void LevelUp(int hpValue, int atkValue, int defValue)
     {
         Player.Instance.ImproveDeckCard(_baseCardSO, hpValue, atkValue, defValue);
     }

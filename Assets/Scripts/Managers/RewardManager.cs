@@ -1,9 +1,5 @@
-using System.Collections;
 using System.Collections.Generic;
-using TMPro.EditorUtilities;
 using UnityEngine;
-using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public enum REWARD_TYPE
 {
@@ -47,7 +43,7 @@ public class RewardManager : MonoBehaviour
 
     private List<BaseCardSO> _listOfRewardsSO = new();
 
-    private List< BaseCardHUD>_listOfRewardsHUD = new();
+    private List<BaseCardHUD> _listOfRewardsHUD = new();
 
     [SerializeField]
     [Min(2)]
@@ -57,7 +53,7 @@ public class RewardManager : MonoBehaviour
     {
         GameManagerActions.OnGameStateChange?.Invoke(GAME_STATE.REWARD_STATE);
         RewardManagerActions.OnRewardCollected += OnRewardCollected;
-        for (int i = 0; i < _numOfRewardsToChoice; i++) 
+        for (int i = 0; i < _numOfRewardsToChoice; i++)
         {
             GenerateRewards();
         }
@@ -87,7 +83,7 @@ public class RewardManager : MonoBehaviour
         else
         {
             GenerateReward(REWARD_TYPE.IRON);
-        }        
+        }
     }
 
     private void ShowReward(BaseCardSO card)

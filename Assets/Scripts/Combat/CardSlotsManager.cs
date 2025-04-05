@@ -16,7 +16,7 @@ public class CardSlotsManager : MonoBehaviour
 
     private List<GameObject> _slots = new List<GameObject>();
 
-    private List<bool> _slotsStatus = new List<bool>{ true, true, true, true, true };
+    private List<bool> _slotsStatus = new List<bool> { true, true, true, true, true };
 
     private List<RectTransform> _slotRectTransforms = new List<RectTransform>();
 

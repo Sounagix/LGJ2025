@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -47,7 +44,7 @@ public class BaseCardOG : MonoBehaviour
 
     private void OnMouseOver()
     {
-        if(!_selected)
+        if (!_selected)
             transform.transform.localScale = new Vector3(1.2f, 1.2f, 1.2f);
     }
 
