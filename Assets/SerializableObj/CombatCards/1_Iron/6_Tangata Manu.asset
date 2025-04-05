@@ -14,8 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardName: Tangata Manu
   _cardDescription: A Birdman creature from the Rapa Nui (Easter Island)
-  _cardImage: {fileID: 21300000, guid: 91c9a4a2594d44e0ba30c3411ddcc9d5, type: 3}
+  _cardImage: {fileID: 21300000, guid: 79db5034643e84325a7cd985769d7bd0, type: 3}
   cARD: 0
+  rEWARD_tYPE: 0
   _damage: 3
   _block: 1
   _life: 15

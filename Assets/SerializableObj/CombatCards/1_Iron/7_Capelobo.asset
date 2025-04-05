@@ -15,7 +15,9 @@ MonoBehaviour:
   _cardName: Capelobo
   _cardDescription: Cryptid creature from Brazil, with an elongated snout of a pig/dog,
     or a giant anteater.
-  _cardImage: {fileID: 21300000, guid: a052a127aace742b0a1984369e47370f, type: 3}
+  _cardImage: {fileID: 21300000, guid: e01c0bd8386874ff2a83caba66e5d142, type: 3}
+  cARD: 0
+  rEWARD_tYPE: 0
   _damage: 3
   _block: 0
   _life: 8

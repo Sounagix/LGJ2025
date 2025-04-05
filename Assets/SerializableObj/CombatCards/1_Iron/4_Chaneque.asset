@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardName: Chaneke
   _cardDescription: A magical mexican "dwarf" creature, usually naked
-  _cardImage: {fileID: 21300000, guid: 4a5eadbcd645341f5b7eee6a8ab7967c, type: 3}
+  _cardImage: {fileID: 21300000, guid: 755119074e55f4954ab302340e4db299, type: 3}
+  cARD: 0
+  rEWARD_tYPE: 0
   _damage: 4
   _block: 1
   _life: 10

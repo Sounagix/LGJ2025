@@ -14,7 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cardName: Pini
   _cardDescription: Fish-Serpent from Ecuador Mythology
-  _cardImage: {fileID: 21300000, guid: 91c9a4a2594d44e0ba30c3411ddcc9d5, type: 3}
+  _cardImage: {fileID: 21300000, guid: 2b74bddaddaca4f9d828c3b2ac8660c6, type: 3}
+  cARD: 0
+  rEWARD_tYPE: 0
   _damage: 6
   _block: 0
   _life: 7
