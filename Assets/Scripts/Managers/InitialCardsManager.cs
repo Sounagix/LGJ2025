@@ -15,7 +15,8 @@ public class InitialCardsManager : MonoBehaviour
         foreach (BaseCardSO card in _initialCards)
         {
             GameObject cardObject = Instantiate(_initialCardPrefab, transform);
-            cardObject.GetComponent<BaseCardHUD>().Initialize(card);
+            CombatCardHUD hud = cardObject.GetComponent<CombatCardHUD>();
+            hud.Initialize(card);
         }
     }
 }

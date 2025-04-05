@@ -8,7 +8,10 @@ using UnityEngine.UI;
 public enum CARD_HUD_TYPE : int
 {
     COMBAT,
+    SUPPORT,
     HEALING,
+    ATTACK_BUFF,
+    DEFENSE_BUFF,
     NULL,
 }
 
@@ -20,6 +23,9 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
 
     [SerializeField]
     protected RawImage _image;
+
+    [SerializeField]
+    protected Image _edgeImg;
 
     protected BaseCardSO _baseCardSO;
 
@@ -39,6 +45,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
 
     protected CARD_HUD_TYPE cARD = CARD_HUD_TYPE.NULL;
 
+
     public virtual void  Initialize(BaseCardSO card, CardSlotsManager cardSlotsManager = null)
     {
         _cardSlotsManager = cardSlotsManager;
@@ -48,6 +55,12 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
         _baseCardSO = card;
         _initialAnchoredPosition = GetComponent<RectTransform>().anchoredPosition;
         _cardImg = GetComponent<Image>();
+        SetEdgeColor();
+    }
+
+    public void OnAddedToBoard()
+    {
+        _cardOnGame = true;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
@@ -66,7 +79,6 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
 
     public virtual void OnPointerClick(PointerEventData eventData)
     {
-        if (blocked || _cardOnGame) return;
         switch (GameManager.Instance.GetGAME_STATE())
         {
             case GAME_STATE.SELECTION_STATE:
@@ -76,6 +88,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
             case GAME_STATE.MAP_STATE:
                 break;
             case GAME_STATE.COMBAT_STATE:
+                if (blocked || !_cardOnGame) return;
                 _selected = true;
                 _cardImg.color = Color.gray;
                 CombatActions.OnCardOGSelected?.Invoke(this);
@@ -89,14 +102,14 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
         }
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    public virtual void OnBeginDrag(PointerEventData eventData)
     {
         if (blocked) return;
         GetComponentInParent<HorizontalLayoutGroup>().enabled = false;
         transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 
-    public void OnDrag(PointerEventData eventData)
+    public virtual void OnDrag(PointerEventData eventData)
     {
         if (blocked) return;
         if (GameManager.Instance.GetGAME_STATE().Equals(GAME_STATE.COMBAT_STATE))
@@ -105,6 +118,7 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
 
     public virtual void OnEndDrag(PointerEventData eventData)
     {
+
     }
 
     public void BlockCard()
@@ -145,27 +159,63 @@ public class BaseCardHUD : MonoBehaviour, IPointerEnterHandler,
         _cardOnGame = true;
         transform.SetParent(tr);
         transform.localPosition = Vector3.zero;
-    }
-
-    public void UnSelecCard()
-    {
-        if (_rdyForDestroy)
-        {
-            _cardSlotsManager.DestroyCard(this);
-            return;
-        }
-        _selected = false;
         _cardImg.color = Color.white;
         transform.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
     }
 
-    public void KillCard()
+    public void UnSelecCard()
     {
-        _rdyForDestroy = true;
+        _selected = false;
+        if (gameObject.activeInHierarchy)
+        {
+            _cardImg.color = Color.white;
+            transform.transform.localScale = new Vector3(1.0f, 1.0f, 1.0f);
+        }
+
+    }
+
+    public void SelectCardAsTouched()
+    {
+        _selected = true;
+    }
+
+    public void OnSelectCard()
+    {
+        _selected = true;
+        _cardOnGame = true;
+        if (gameObject.activeInHierarchy)
+        {
+            _cardImg.color = Color.gray;
+            transform.transform.localScale = new Vector3(1.5f, 1.5f, 1.5f);
+        }
+
     }
 
     public CARD_HUD_TYPE GetHUDCardType()
     {
         return cARD;
+    }
+
+    public void LevelUp(int hpValue,int atkValue, int defValue)
+    {
+        Player.Instance.ImproveDeckCard(_baseCardSO, hpValue, atkValue, defValue);
+    }
+
+    public void SetEdgeColor()
+    {
+        switch (_baseCardSO.rEWARD_tYPE)
+        {
+            case REWARD_TYPE.IRON:
+                _edgeImg.color = new Color(255, 215, 0);
+                break;
+            case REWARD_TYPE.SILVER:
+                _edgeImg.color = new Color(192, 192, 192);
+                break;
+            case REWARD_TYPE.GOLD:
+                _edgeImg.color = new Color(70, 70, 70);
+                break;
+            case REWARD_TYPE.SIZE:
+                break;
+        }
     }
 }

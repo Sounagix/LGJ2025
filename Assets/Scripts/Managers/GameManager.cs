@@ -11,6 +11,7 @@ public enum SCENES: int
     INIT_SCENE  = 2,
     GAME        = 3,
     GAME_OVER   = 4,
+    WIN_SCENE   = 5,
 }
 
 public enum GAME_STATE : int

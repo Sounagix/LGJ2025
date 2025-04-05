@@ -16,6 +16,7 @@ MonoBehaviour:
   _cardDescription: A water dog creature with a prehensile tail shaped like a hand.
   _cardImage: {fileID: 21300000, guid: dc2b16b0f68a74ae0bfdf31d9d5318a9, type: 3}
   cARD: 0
+  rEWARD_tYPE: 1
   _damage: 8
   _block: 2
   _life: 30

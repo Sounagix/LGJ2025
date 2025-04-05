@@ -17,4 +17,7 @@ public class BaseCardSO : ScriptableObject
 
     [SerializeField]
     public CARD_HUD_TYPE cARD;
+
+    [SerializeField]
+    public REWARD_TYPE rEWARD_tYPE;
 }

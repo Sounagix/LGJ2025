@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum CARD_TYPE
 {
@@ -37,6 +38,9 @@ public class MapCard : MonoBehaviour
     private float _maxChance;
 
     [SerializeField]
+    private SpriteRenderer _cardImage;
+
+    [SerializeField]
     private List<CombatCardSO> _ironCards = new();
 
     [SerializeField]
@@ -44,6 +48,14 @@ public class MapCard : MonoBehaviour
 
     [SerializeField]
     private List<CombatCardSO> _goldCards = new();
+
+    [SerializeField]
+    private List<CombatCardSO> _bossCards = new();
+
+    [SerializeField]
+    private int _numOfCardForFirstLap, _numOfCardForSecondLap, _numOfCardForThirdLap, _numOfCardsToFinishGame;
+
+    private bool _touched = false;
 
     private void Awake()
     {
@@ -57,7 +69,6 @@ public class MapCard : MonoBehaviour
 
     private void SetUpCard()
     {
-        _cARDVALUE = (REWARD_TYPE)UnityEngine.Random.Range(1, (int)REWARD_TYPE.SIZE);
         float chance = UnityEngine.Random.Range(0, _maxChance);
         if (chance <= _rewardsChance)
         {
@@ -66,17 +77,49 @@ public class MapCard : MonoBehaviour
         else if (chance <= _enemychance)
         {
             _cardType = CARD_TYPE.ENEMY;
-            _numOfCards = UnityEngine.Random.Range(0, _numOfCards);
-            for (int i = 0; i < _numOfCards; i++)
-            {
-
-                _cardsOnMapCard.Add(GetCard(_cARDVALUE));
-            }
         }
         else
         {
             _cardType = CARD_TYPE.BLOCK;
         }
+    }
+
+    public void SetUpCards(int numOfMapCardsTouched)
+    {
+        _numOfCards = UnityEngine.Random.Range(1, _numOfCards);
+        if (numOfMapCardsTouched >= _numOfCardsToFinishGame)
+        {
+            // 5 acompañando al boss
+            _numOfCards = 4;
+            _cARDVALUE = REWARD_TYPE.GOLD;
+            for (int i = 0; i < _numOfCards; i++)
+            {
+                _cardsOnMapCard.Add(GetCard(_cARDVALUE));
+            }
+            _cARDVALUE = REWARD_TYPE.BOSS;
+            _cardsOnMapCard.Add(GetCard(_cARDVALUE));
+        }
+        else
+        {
+            if (numOfMapCardsTouched <= _numOfCardForFirstLap)
+            {
+                _cARDVALUE = REWARD_TYPE.IRON;
+            }
+            else if (numOfMapCardsTouched <= _numOfCardForSecondLap)
+            {
+                _cARDVALUE = REWARD_TYPE.SILVER;
+            }
+            else if (numOfMapCardsTouched <= _numOfCardForThirdLap)
+            {
+                _cARDVALUE = REWARD_TYPE.GOLD;
+            }
+
+            for (int i = 0; i < _numOfCards; i++)
+            {
+                _cardsOnMapCard.Add(GetCard(_cARDVALUE));
+            }
+        }
+
     }
 
     public void SetUp(BoardManager boardManager, Vector2Int index)
@@ -92,7 +135,7 @@ public class MapCard : MonoBehaviour
         switch (rEWARD_TYPE)
         {
             case REWARD_TYPE.IRON:
-                index = UnityEngine.Random.Range(1, _ironCards.Count);
+                index = UnityEngine.Random.Range(0, _ironCards.Count);
                 currentCard = _ironCards[index];
                 break;
             case REWARD_TYPE.SILVER:
@@ -102,6 +145,10 @@ public class MapCard : MonoBehaviour
             case REWARD_TYPE.GOLD:
                 index = UnityEngine.Random.Range(0, _goldCards.Count);
                 currentCard = _goldCards[index];
+                break;
+            case REWARD_TYPE.BOSS:
+                index = UnityEngine.Random.Range(0, _bossCards.Count);
+                currentCard = _bossCards[index];
                 break;
             case REWARD_TYPE.SIZE:
                 break;
@@ -130,6 +177,11 @@ public class MapCard : MonoBehaviour
         return _cardType;
     }
 
+    public REWARD_TYPE GetCardReward()
+    {
+        return _cARDVALUE;
+    }
+
     public void OnCardSelected()
     {
         _spriteRenderer.color = Color.gray;
@@ -142,6 +194,13 @@ public class MapCard : MonoBehaviour
 
     public void ChangeToBlock()
     {
+        _cardImage.color = new Color(100, 85, 85, 223);
         _cardType = CARD_TYPE.BLOCK;
+        _touched = true;
+    }
+
+    public bool IsUsed()
+    {
+        return _touched;
     }
 }

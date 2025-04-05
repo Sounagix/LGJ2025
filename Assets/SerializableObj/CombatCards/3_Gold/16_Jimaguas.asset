@@ -16,6 +16,7 @@ MonoBehaviour:
   _cardDescription: Ghostly Twins Dolls with PSI powers from Cuba.
   _cardImage: {fileID: 21300000, guid: d4088a4d5c0ee41109cb2f2c7d0a3387, type: 3}
   cARD: 0
+  rEWARD_tYPE: 2
   _damage: 13
   _block: 0
   _life: 30

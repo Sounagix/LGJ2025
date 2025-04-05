@@ -3,13 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 
 
 public static class CombatActions
 {
     public static Action<BaseCardHUD> OnCardOGSelected;
 
-    public static Action<HealingCardHUD> OnHealingCardDroped;
+    public static Action<SupportCardHUD> OnDropSupportCard;
 
     public static Action<CombatCardHUD> OnCombatCardDroped;
 } 
@@ -50,6 +51,12 @@ public class CombatManager : MonoBehaviour
     [SerializeField]
     private DeckManager _deckManager;
 
+    [SerializeField]
+    private int _minImproveHp, _minImproveAttack, _minImproveDef;
+
+    [SerializeField]
+    private int _maxImproveHp, _maxImproveAttack, _maxImproveDef;
+
     private Coroutine _startCoroutine = null;
 
     private BaseCardHUD _currentCardSelected;
@@ -58,11 +65,16 @@ public class CombatManager : MonoBehaviour
 
     private MapCard _mapCard;
 
+    private AudioSource _audioSource;
+
+    [SerializeField]
+    private AudioClip _selectionClip;
+
     private void OnEnable()
     {
         CombatActions.OnCardOGSelected += OnCardOGSelected;
         CombatActions.OnCombatCardDroped += OnCombatCardDroped;
-        CombatActions.OnHealingCardDroped += OnHealingCardDrop;
+        CombatActions.OnDropSupportCard += OnDropSupportCard;
         GameManagerActions.OnGameStateChange?.Invoke(GAME_STATE.COMBAT_STATE);
         _startCoroutine = StartCoroutine(WaitForStart());
     }
@@ -71,8 +83,14 @@ public class CombatManager : MonoBehaviour
     {
         CombatActions.OnCombatCardDroped -= OnCombatCardDroped;
         CombatActions.OnCardOGSelected -= OnCardOGSelected;
-        CombatActions.OnHealingCardDroped -= OnHealingCardDrop;
+        CombatActions.OnDropSupportCard -= OnDropSupportCard;
         GameManagerActions.OnGameStateChange?.Invoke(GAME_STATE.MAP_STATE);
+    }
+
+
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
     }
 
     private IEnumerator WaitForStart()
@@ -87,12 +105,15 @@ public class CombatManager : MonoBehaviour
     {
         BaseCardSO main = Player.Instance.GetMainCard();
         if (main == null)
+        {
             main = _mainCardTest;
+            Player.Instance.AddMainCard(main);
+        }
         _playerCardSlotManager.CreateMainCard(main);
     }
     private void CreateEnemies()
     {
-        _enemyCardSlotManager.CreateDeckCard(_mapCard.GetCards());
+        _enemyCardSlotManager.CreateDeckCard(_mapCard.GetCards(), _mapCard.GetCardReward());
     }
 
     private CombatCardHUD OnDropCardOverCombatCard(BaseCardHUD droppedHUD)
@@ -150,12 +171,25 @@ public class CombatManager : MonoBehaviour
 
     }
 
-    private void OnHealingCardDrop(HealingCardHUD hUD)
+    private void OnDropSupportCard(SupportCardHUD hUD)
     {
         CombatCardHUD overlapCard = OnDropCardOverCombatCard(hUD);
         if (overlapCard != null)
         {
-            overlapCard.HealCard(hUD.GetHealingValue());
+            if (hUD.GetHUDCardType().Equals(CARD_HUD_TYPE.HEALING)) 
+            {
+                overlapCard.HealCard((hUD as HealingCardHUD).GetHealingValue());
+            }
+            else if (hUD.GetHUDCardType().Equals(CARD_HUD_TYPE.ATTACK_BUFF))
+            {
+                overlapCard.BuffAttack((hUD as AttackBuffCardHUD).GetAttackBuffValue());
+            }
+            else if (hUD.GetHUDCardType().Equals(CARD_HUD_TYPE.DEFENSE_BUFF))
+            {
+                overlapCard.BuffDefense((hUD as DefenseBuffCardHUD).GetDefenseValue());
+            }
+
+            hUD.NotSelectedOnSlot();
             Destroy(hUD.gameObject);
         }
         else
@@ -178,6 +212,7 @@ public class CombatManager : MonoBehaviour
 
     private void OnCardOGSelected(BaseCardHUD oG)
     {
+        _audioSource.PlayOneShot(_selectionClip);
         if (!IsAllyCard(oG))
         {
             if (_currentCardSelected && !_currentTargetSelected)
@@ -189,6 +224,7 @@ public class CombatManager : MonoBehaviour
             {
                 _currentTargetSelected.UnSelecCard();
                 _currentTargetSelected = oG;
+                _currentTargetSelected.OnSelectCard();
                 AttackEnemyCard();
             }
         }
@@ -196,10 +232,12 @@ public class CombatManager : MonoBehaviour
         {
             _currentCardSelected.UnSelecCard();
             _currentCardSelected = oG;
+            _currentCardSelected.OnSelectCard();
         }
         else
         {
             _currentCardSelected = oG;
+            _currentCardSelected.OnSelectCard();
         }
     }
 
@@ -218,8 +256,10 @@ public class CombatManager : MonoBehaviour
     
     private void OnBackFromAttack()
     {
-        _currentCardSelected.UnSelecCard();
-        _currentTargetSelected.UnSelecCard();
+        if(_currentCardSelected)
+            _currentCardSelected.UnSelecCard();
+        if(_currentTargetSelected)
+            _currentTargetSelected.UnSelecCard();
         _currentCardSelected = null;
         _currentTargetSelected = null;
         if (_enemyCardSlotManager.HaveCards())
@@ -342,17 +382,20 @@ public class CombatManager : MonoBehaviour
         bool kill = false;
         if (attackDamage - defPoints > 0)
             kill = defederHUD.SubtractLife(attackDamage - defPoints);
+        else
+            kill = defederHUD.SubtractLife(1);
 
         if (kill)
         {
+            LevelUpCard(attacker as CombatCardHUD);
             if (aTTACK_TYPE.Equals(ATTACK_TYPE.ALLY))
             {
                 _enemyCardSlotManager.KillCard(defederHUD);
             }
             else
             {
-                _playerCardSlotManager.KillCard(defederHUD);
                 _deckManager.RemoveCard(defender);
+                _playerCardSlotManager.KillCard(defederHUD);
             }
         }
     }
@@ -366,10 +409,23 @@ public class CombatManager : MonoBehaviour
         _handManager.Clean();
         gameObject.SetActive(false);
         _deckManager.Clean();
+        if (_enemyCardSlotManager.GetCardType().Equals(REWARD_TYPE.BOSS))
+        {
+            GameManager.Instance.LoadScene(SCENES.WIN_SCENE);
+        }
     }
 
     public void SetEnemyCards(MapCard mapCard)
     {
         _mapCard = mapCard;
+    }
+
+    private void LevelUpCard(CombatCardHUD card)
+    {
+        int hpValue = UnityEngine.Random.Range(_minImproveHp, _maxImproveHp);
+        int atkValue = UnityEngine.Random.Range(_minImproveAttack, _maxImproveAttack);
+        int defValue = UnityEngine.Random.Range(_minImproveDef, _maxImproveDef);
+
+        card.LevelUp(hpValue, atkValue, defValue);
     }
 }

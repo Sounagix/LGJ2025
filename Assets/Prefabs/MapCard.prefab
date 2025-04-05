@@ -148,6 +148,7 @@ MonoBehaviour:
   _rewardsChance: 1
   _enemychance: 5
   _maxChance: 10
+  _cardImage: {fileID: 1918268820271882152}
   _ironCards:
   - {fileID: 11400000, guid: d79fefe5c398a495ab09f10d848c8faa, type: 2}
   - {fileID: 11400000, guid: 5e7e5381ed9084fa4986cbf3b2c01069, type: 2}
@@ -168,7 +169,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 9439571f35154447d864dd07d2c947bb, type: 2}
   - {fileID: 11400000, guid: 63dc468353e6b4de9927fec0470b8f93, type: 2}
   - {fileID: 11400000, guid: b24b5647c3cdb43b9a9bb28a92987cdb, type: 2}
-  - {fileID: 11400000, guid: c9d0c8dbef188bb46a612881a7c31a90, type: 2}
+  _bossCards:
+  - {fileID: 11400000, guid: ca031dfe5db944085bf74618a5378df8, type: 2}
+  - {fileID: 11400000, guid: d5d05f1ccd48e4f9486fc986034d1e53, type: 2}
+  _numOfCardForFirstLap: 1
+  _numOfCardForSecondLap: 2
+  _numOfCardForThirdLap: 3
+  _numOfCardsToFinishGame: 4
 --- !u!1 &4794082696299402527
 GameObject:
   m_ObjectHideFlags: 0

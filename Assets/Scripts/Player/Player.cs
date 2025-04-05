@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -8,7 +9,7 @@ using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
-    private BaseCardSO _mainCard;
+    private CombatCardSO _mainCard;
 
     private List<BaseCardSO> _deck = new List<BaseCardSO>();
 
@@ -20,7 +21,7 @@ public class Player : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            GameManagerActions.OnGameStateChange(GAME_STATE.SELECTION_STATE);
+            GameManagerActions.OnGameStateChange?.Invoke(GAME_STATE.SELECTION_STATE);
             DontDestroyOnLoad(gameObject);
         }
         else
@@ -47,12 +48,12 @@ public class Player : MonoBehaviour
 
     public void AddMainCard(BaseCardSO baseCardSO)
     {
-        _mainCard = baseCardSO;
+        _mainCard = Instantiate(baseCardSO as CombatCardSO);
     }
 
     public void AddCardToDeck(BaseCardSO baseCardSO)
     {
-        _deck.Add(baseCardSO);
+        _deck.Add(Instantiate(baseCardSO));
     }
 
     public BaseCardSO GetMainCard()
@@ -72,4 +73,22 @@ public class Player : MonoBehaviour
             _deck.Remove(card);
     }
 
+
+    public void ImproveDeckCard(BaseCardSO card, int hpValue, int atkValue, int defValue)
+    {
+        if (_deck.Contains(card))
+        {
+            int index = _deck.IndexOf(card);
+            CombatCardSO cmb = _deck[index].GetComponent<CombatCardSO>();
+            cmb._block += defValue;
+            cmb._life += hpValue;
+            cmb._damage += atkValue;
+        }
+        else if (_mainCard.Equals(card))
+        {
+            _mainCard._block += defValue;
+            _mainCard._life += hpValue;
+            _mainCard._damage += atkValue;
+        }
+    }
 }

@@ -17,5 +17,6 @@ MonoBehaviour:
     strength to fight on. Effect: Restore 5 health points to a friendly card on the
     field.'
   _cardImage: {fileID: 21300000, guid: 6e96120f16ae59b4bbb11fba68eb6f36, type: 3}
-  cARD: 1
+  cARD: 2
+  rEWARD_tYPE: 2
   _valueOfHealing: 20

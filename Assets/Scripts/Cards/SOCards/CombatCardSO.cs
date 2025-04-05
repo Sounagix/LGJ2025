@@ -13,5 +13,4 @@ public class CombatCardSO : BaseCardSO
 
     [SerializeField]
     public int _life;
-
 }

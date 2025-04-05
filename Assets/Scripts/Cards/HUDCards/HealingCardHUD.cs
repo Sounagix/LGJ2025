@@ -24,30 +24,4 @@ public class HealingCardHUD : SupportCardHUD
     {
         return _valueOfHealing;
     }
-
-    public override void OnEndDrag(PointerEventData eventData)
-    {
-        if (blocked) return;
-        if (!_cardOnGame)
-            CombatActions.OnHealingCardDroped?.Invoke(this);
-    }
-
-    public override void OnPointerClick(PointerEventData eventData)
-    {
-        if (blocked || _cardOnGame) return;
-        switch (GameManager.Instance.GetGAME_STATE())
-        {
-            case GAME_STATE.COMBAT_STATE:
-                _selected = true;
-                _cardImg.color = Color.gray;
-                CombatActions.OnCardOGSelected?.Invoke(this);
-                break;
-            case GAME_STATE.REWARD_STATE:
-                Player.Instance.AddCardToDeck(_baseCardSO);
-                RewardManagerActions.OnRewardCollected?.Invoke();
-                break;
-            case GAME_STATE.NULL:
-                break;
-        }
-    }
 }

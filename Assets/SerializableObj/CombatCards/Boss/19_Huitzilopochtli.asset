@@ -16,6 +16,7 @@ MonoBehaviour:
   _cardDescription: The God of War in Aztec Mythology ready to test you.
   _cardImage: {fileID: 21300000, guid: a67efad658d414bbe90087c8b89619c0, type: 3}
   cARD: 0
+  rEWARD_tYPE: 3
   _damage: 25
   _block: 5
   _life: 250

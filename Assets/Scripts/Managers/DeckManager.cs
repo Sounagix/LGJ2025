@@ -9,7 +9,7 @@ public class DeckManager : MonoBehaviour
     private Button _deckButton;
 
     [SerializeField]
-    private GameObject _combatCardPrefab, _healingCardPrefab;
+    private GameObject _combatCardPrefab, _healingCardPrefab, _defenseCardPrefab, _attackCardPrefab;
 
     [SerializeField]
     private float _deckToHandTime;
@@ -24,6 +24,13 @@ public class DeckManager : MonoBehaviour
 
     [SerializeField]
     private List<BaseCardSO> _testList = new();
+
+    private AudioSource _audioSource;
+
+    private void Awake()
+    {
+        _audioSource = GetComponent<AudioSource>();
+    }
 
     private void OnEnable()
     {
@@ -41,7 +48,7 @@ public class DeckManager : MonoBehaviour
         foreach (BaseCardSO card in deck)
         {
             _deck.Add(Instantiate(card));
-            
+            //_deck.Add(card);
         }
         //_deck.CopyTo(0, Player.Instance.GetDeck(),); //= Player.Instance.GetDeck();
         if (_deck.Count > 0)
@@ -62,6 +69,7 @@ public class DeckManager : MonoBehaviour
 
     private void DrawCard()
     {
+        _audioSource.Play();
         BaseCardHUD currentCard = CreateHUDCard();
         StartCoroutine(MoveCardFromDeckToHand(currentCard, _handManager.transform.position));
         if (_deck.Count <= 0)
@@ -81,19 +89,36 @@ public class DeckManager : MonoBehaviour
                 {
                     currentCard = Instantiate(_combatCardPrefab, transform);
                     hudCard = currentCard.GetComponent<CombatCardHUD>();
+                    hudCard.Initialize(_deck[index] as CombatCardSO);
                 }
                 break;
             case CARD_HUD_TYPE.HEALING:
                 {
                     currentCard = Instantiate(_healingCardPrefab, transform);
                     hudCard = currentCard.GetComponent<HealingCardHUD>();
+                    hudCard.Initialize(_deck[index] as HealingCardSO);
+                }
+                break;
+            case CARD_HUD_TYPE.ATTACK_BUFF:
+                {
+                    currentCard = Instantiate(_attackCardPrefab, transform);
+                    hudCard = currentCard.GetComponent<AttackBuffCardHUD>();
+                    hudCard.Initialize(_deck[index] as AttackBuffCardSO);
+                }
+                break;
+            case CARD_HUD_TYPE.DEFENSE_BUFF:
+                {
+                    currentCard = Instantiate(_defenseCardPrefab, transform);
+                    hudCard = currentCard.GetComponent<DefenseBuffCardHUD>();
+                    hudCard.Initialize(_deck[index] as DefenseBuffCardSO);
                 }
                 break;
             case CARD_HUD_TYPE.NULL:
                 break;
         }
-        hudCard.Initialize(_deck[index]);
         currentCard.transform.position = transform.position;
+        hudCard.BlockCard();
+        Player.Instance.RemoveCard(_deck[index]._cardName);
         _deck.RemoveAt(index);
         return hudCard;
     }
@@ -119,6 +144,7 @@ public class DeckManager : MonoBehaviour
     private void OnCardTouchHand(BaseCardHUD card)
     {
         _handManager.AddCard(card);
+        card.UnlockCard();
     }
 
     public void Clean()

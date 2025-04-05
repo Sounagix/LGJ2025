@@ -47,6 +47,8 @@ public class BoardManager : MonoBehaviour
     [SerializeField]
     private CombatManager _combatManager;
 
+    private int _currentNumOfMapCardsPlayed = 0;
+
     private void Awake()
     {
         if(Instance == null )
@@ -82,6 +84,11 @@ public class BoardManager : MonoBehaviour
         CreateBoard();
     }
 
+    public int GetNumOfCardsTouched()
+    {
+        return _currentNumOfMapCardsPlayed;
+    }
+
     private void CreateBoard()
     {
         Vector2 topLeftWorld = Camera.main.ScreenToWorldPoint(new Vector2(0, 0));
@@ -105,6 +112,7 @@ public class BoardManager : MonoBehaviour
             }
         }
         SetPlayerOnTheCenter();
+
     }
 
     private void SetPlayerOnTheCenter()
@@ -117,6 +125,7 @@ public class BoardManager : MonoBehaviour
         {
             _playerBody.position = _cards[centerIndex].transform.position;
             _playerCard = _cards[centerIndex];
+            OpenFirstMapCard(_cards[centerIndex]);
         }
     }
     private IEnumerator MovePlayer(Vector2 target, float duration)
@@ -159,10 +168,13 @@ public class BoardManager : MonoBehaviour
     public void OnPlayerMovementFinished()
     {
         _playerMovement = null;
+        if (_playerCard.IsUsed()) return;
         switch (_playerCard.GetCardType())
         {
             case CARD_TYPE.ENEMY:
+                _currentNumOfMapCardsPlayed++;
                 _combatPanel.SetActive(true);
+                _playerCard.SetUpCards(_currentNumOfMapCardsPlayed);
                 _combatManager.SetEnemyCards(_playerCard);
                 break;
             case CARD_TYPE.REWARD:
@@ -199,5 +211,18 @@ public class BoardManager : MonoBehaviour
             }
         }
         SetPlayerOnTheCenter();
+    }
+
+    private void OpenFirstMapCard(MapCard card)
+    {
+        WaitForEnterAtFirstCard(card);
+    }
+
+    private void WaitForEnterAtFirstCard(MapCard card)
+    {
+        _playerCard = card;
+        //_playerMovement = StartCoroutine(MovePlayer(card.transform.position, _displacementDuration));
+        _playerCard.OnCardSelected();
+        _rewardPanel.SetActive(true);
     }
 }
