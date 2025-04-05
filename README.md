@@ -103,3 +103,11 @@ Once a card is used in combat, it is removed from the deck for the rest of the r
 - Features an original mechanic: exploring a map made entirely of cards.
 
 ---
+## 🌐 Links
+
+- **Itch.io page:** [https://randomplayerstudios.itch.io/heartofcards](https://randomplayerstudios.itch.io/heartofcards)
+
+- **Play the game:** [https://sounagix.github.io/HeartOfCards/](https://sounagix.github.io/HeartOfCards/)
+- **Source code (GitHub):** [https://github.com/Sounagix/LGJ2025](https://github.com/Sounagix/LGJ2025)
+
+---
