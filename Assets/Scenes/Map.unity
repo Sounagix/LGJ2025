@@ -1377,7 +1377,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: d3d37c4adeb77cc4d8ec3553d270edf7, type: 2}
   - {fileID: 11400000, guid: 2fd67244ad0a6194db4f978da352d06b, type: 2}
   - {fileID: 11400000, guid: 2d0c3715e7fa52445aaae15db08b4a77, type: 2}
-  _ironChance: 9
+  _ironChance: 7
   _silverChance: 5
   _goldChance: 3
   _minRewardChance: 9
