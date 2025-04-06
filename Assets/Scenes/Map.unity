@@ -1377,9 +1377,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2fd67244ad0a6194db4f978da352d06b, type: 2}
   - {fileID: 11400000, guid: 2d0c3715e7fa52445aaae15db08b4a77, type: 2}
   _ironChance: 9
-  _silverChance: 3
-  _goldChance: 1
-  _minRewardChance: 8
+  _silverChance: 4
+  _goldChance: 2
+  _minRewardChance: 10
   _maxRewardChance: 10
   _combatHUDPrefab: {fileID: 4456910734757898141, guid: cb83644e305cb09419159e05c4d83713, type: 3}
   _healingHUDPrefab: {fileID: 4456910734757898141, guid: 0b813278c56731b42b578bbec6d74149, type: 3}
@@ -2161,11 +2161,11 @@ MonoBehaviour:
   _enemyTimeToWaitForAttack: 1
   _mainCardTest: {fileID: 11400000, guid: ae083af6b8425ba42a7dfecb6882a6a3, type: 2}
   _deckManager: {fileID: 961651838}
-  _minImproveHp: 2
+  _minImproveHp: 1
   _minImproveAttack: 1
   _minImproveDef: 0
-  _maxImproveHp: 4
-  _maxImproveAttack: 0
+  _maxImproveHp: 2
+  _maxImproveAttack: 1
   _maxImproveDef: 1
   _selectionClip: {fileID: 8300000, guid: e237e1ea0d4358a4b92da463187f9202, type: 3}
 --- !u!114 &1591019629

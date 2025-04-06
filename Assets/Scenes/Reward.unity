@@ -671,20 +671,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ac8bbbc409c1b429534ecc3f1cae2b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _midPanel: {fileID: 0}
   _ironRewards:
   - {fileID: 11400000, guid: df4d1ae14ab38274c8d3724e752fb58d, type: 2}
   _silverRewards:
-  - {fileID: 11400000, guid: 1a9939b18eabe0842bd9ed630f8d1995, type: 2}
+  - {fileID: 11400000, guid: dfb273a4308434fa48b70fd02ae5288a, type: 2}
   _goldRewards:
   - {fileID: 11400000, guid: c9d0c8dbef188bb46a612881a7c31a90, type: 2}
-  _ironChance: 10
-  _silverChance: 4
-  _goldChance: 2
-  _minRewardChance: 0
+  _ironChance: 6
+  _silverChance: 2
+  _goldChance: 1
+  _minRewardChance: 10
   _maxRewardChance: 10
-  _rewardHUDPrefab: {fileID: -4318753353064521666, guid: cb83644e305cb09419159e05c4d83713, type: 3}
-  _timeToBack: 2
-  _backButton: {fileID: 175302377}
+  _combatHUDPrefab: {fileID: 0}
+  _healingHUDPrefab: {fileID: 0}
+  _numOfRewardsToChoice: 3
 --- !u!1 &1230155409
 GameObject:
   m_ObjectHideFlags: 0

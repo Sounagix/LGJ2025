@@ -297,7 +297,7 @@ public class CombatManager : MonoBehaviour
             yield return null;
         }
 
-        attacker.transform.position = target; // asegúrate de terminar exactamente en el destino
+        attacker.transform.position = target; // aseg?rate de terminar exactamente en el destino
 
         ApplicateDamage(attacker, defender, ATTACK_TYPE.ALLY);
 
@@ -373,9 +373,9 @@ public class CombatManager : MonoBehaviour
             yield return null;
         }
 
-        attacker.transform.position = target; // asegúrate de terminar exactamente en el destino
+        attacker.transform.position = target; // aseg?rate de terminar exactamente en el destino
 
-        // Aplicar daños
+        // Aplicar da?os
         ApplicateDamage(attacker, defender, ATTACK_TYPE.ENEMY);
 
         startPos = attacker.transform.position;
