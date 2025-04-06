@@ -46,6 +46,9 @@ public class BoardManager : MonoBehaviour
 
     private int _currentNumOfMapCardsPlayed = 0;
 
+    public AudioSource charmoveSFX;
+
+
     private void Awake()
     {
         if (Instance == null)
@@ -137,7 +140,7 @@ public class BoardManager : MonoBehaviour
             _playerBody.position = Vector2.Lerp(start, target, t);
             yield return null;
         }
-
+ 
         _playerBody.transform.position = target;
         OnPlayerMovementFinished();
     }
@@ -183,6 +186,7 @@ public class BoardManager : MonoBehaviour
                 break;
         }
         _playerCard.ChangeToBlock();
+        charmoveSFX.Play();
     }
 
     private void LoadSceneMode()

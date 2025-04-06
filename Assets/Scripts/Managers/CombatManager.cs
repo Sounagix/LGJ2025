@@ -75,7 +75,19 @@ public class CombatManager : MonoBehaviour
     private AudioSource _audioSource;
 
     [SerializeField]
+    private GameObject _rewardPanel;
+
+    [SerializeField]
     private AudioClip _selectionClip;
+
+    [SerializeField]
+    private AudioClip _attackClip;
+
+    [SerializeField]
+    private AudioClip _defeatClip;
+
+    [SerializeField]
+    private AudioClip _winClip;
 
     private ATTACK_STATEGY aTTACK_sTATEGY;
 
@@ -263,6 +275,7 @@ public class CombatManager : MonoBehaviour
         _playerCardSlotManager.BlockSelection();
         _enemyCardSlotManager.BlockSelection();
         StartCoroutine(MoveCard(_currentCardSelected, _currentTargetSelected, _timeToAttack));
+        _audioSource.PlayOneShot(_attackClip);
     }
 
     private void OnBackFromAttack()
@@ -279,6 +292,7 @@ public class CombatManager : MonoBehaviour
         }
         else
         {
+            _audioSource.PlayOneShot(_winClip);
             OnFinishCombat();
         }
     }
@@ -389,6 +403,7 @@ public class CombatManager : MonoBehaviour
             yield return null;
         }
         attacker.transform.position = target;
+        _audioSource.PlayOneShot(_attackClip);
         OnEnemyAttackFinish();
     }
 
@@ -427,6 +442,8 @@ public class CombatManager : MonoBehaviour
                 _deckManager.RemoveCard(defender);
                 _playerCardSlotManager.KillCard(defederHUD);
             }
+
+            _audioSource.PlayOneShot(_defeatClip);
         }
     }
 
@@ -439,10 +456,13 @@ public class CombatManager : MonoBehaviour
         _handManager.Clean();
         gameObject.SetActive(false);
         _deckManager.Clean();
+
         if (_enemyCardSlotManager.GetCardType().Equals(REWARD_TYPE.BOSS))
         {
             GameManager.Instance.LoadScene(SCENES.WIN_SCENE);
         }
+        else
+            _rewardPanel.SetActive(true);
     }
 
     public void SetEnemyCards(MapCard mapCard)
