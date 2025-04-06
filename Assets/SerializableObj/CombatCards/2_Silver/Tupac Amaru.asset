@@ -13,10 +13,7 @@ MonoBehaviour:
   m_Name: Tupac Amaru
   m_EditorClassIdentifier: 
   _cardName: "T\xFApac Amaru II"
-  _cardDescription: "Leader, symbol, and flame of rebellion. Born Jos\xE9 Gabriel
-    Condorcanqui, he took the name of the last Inca and led the greatest uprising
-    against Spanish rule in colonial Peru. His voice echoed across the Andes \u2014
-    a call for freedom that still resonates."
+  _cardDescription: Leader, symbol, and flame of rebellion.
   _cardImage: {fileID: 21300000, guid: 8ae086f215852254a9dc041d0aa72a8a, type: 3}
   cARD: 0
   rEWARD_tYPE: 1

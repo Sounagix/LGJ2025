@@ -17,6 +17,6 @@ MonoBehaviour:
   _cardImage: {fileID: 21300000, guid: 7ed91c2ef9769422691273d22899c1a6, type: 3}
   cARD: 0
   rEWARD_tYPE: 2
-  _damage: 5
+  _damage: 10
   _block: 4
-  _life: 50
+  _life: 60

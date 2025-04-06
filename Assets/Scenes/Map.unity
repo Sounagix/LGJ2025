@@ -1378,9 +1378,9 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2fd67244ad0a6194db4f978da352d06b, type: 2}
   - {fileID: 11400000, guid: 2d0c3715e7fa52445aaae15db08b4a77, type: 2}
   _ironChance: 9
-  _silverChance: 4
-  _goldChance: 2
-  _minRewardChance: 10
+  _silverChance: 5
+  _goldChance: 3
+  _minRewardChance: 9
   _maxRewardChance: 10
   _combatHUDPrefab: {fileID: 4456910734757898141, guid: cb83644e305cb09419159e05c4d83713, type: 3}
   _healingHUDPrefab: {fileID: 4456910734757898141, guid: 0b813278c56731b42b578bbec6d74149, type: 3}
@@ -1441,7 +1441,7 @@ AudioSource:
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 0
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500
@@ -2353,13 +2353,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: c9fe7838f5ef041b09c92447769efbbf, type: 2}
   _timeToAttack: 0.5
   _timeToStart: 0.25
-  _enemyTimeToWaitForAttack: 1
+  _enemyTimeToWaitForAttack: 0.5
   _mainCardTest: {fileID: 11400000, guid: ae083af6b8425ba42a7dfecb6882a6a3, type: 2}
   _deckManager: {fileID: 961651838}
-  _minImproveHp: 1
+  _minImproveHp: 2
   _minImproveAttack: 1
   _minImproveDef: 0
-  _maxImproveHp: 2
+  _maxImproveHp: 3
   _maxImproveAttack: 1
   _maxImproveDef: 1
   _rewardPanel: {fileID: 1158078089}
@@ -2367,6 +2367,7 @@ MonoBehaviour:
   _attackClip: {fileID: 8300000, guid: 97498e683edab4cd6971c9ec2667a7ea, type: 3}
   _defeatClip: {fileID: 8300000, guid: 81f41958db99448ef89e4046020c0139, type: 3}
   _winClip: {fileID: 8300000, guid: f71b408a4690f40508bf369527d759e1, type: 3}
+  _supportClip: {fileID: 8300000, guid: 1090f7f88b7234d3e8d7fc87fb0f4227, type: 3}
 --- !u!114 &1591019629
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2896,13 +2897,13 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 8300000, guid: 9aa4fee0070324a48bf9a7c34eaa91cc, type: 3}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.8
   m_Pitch: 1
   Loop: 1
   Mute: 0
   Spatialize: 0
   SpatializePostEffects: 0
-  Priority: 128
+  Priority: 256
   DopplerLevel: 1
   MinDistance: 1
   MaxDistance: 500

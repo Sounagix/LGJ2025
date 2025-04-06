@@ -18,5 +18,5 @@ MonoBehaviour:
   cARD: 0
   rEWARD_tYPE: 2
   _damage: 15
-  _block: 1
+  _block: 3
   _life: 40
